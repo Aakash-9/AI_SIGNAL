@@ -1,0 +1,41 @@
+# ============================================================================
+#  Requirements — NL → App Compiler
+# ============================================================================
+#  This is a Node.js / TypeScript project. There is no pip here — dependencies
+#  are declared in package.json and installed with a single command.
+#
+# ── Prerequisite ────────────────────────────────────────────────────────────
+#     Node.js >= 22        (https://nodejs.org)   — ships with npm
+#                          (Node 22.5+ is required for the built-in SQLite)
+#
+# ── Install ALL dependencies (one command) ──────────────────────────────────
+#     npm install
+#
+# ── Configure ───────────────────────────────────────────────────────────────
+#     copy  .env.example  ->  .env
+#     then add a free Gemini API key:  https://aistudio.google.com/apikey
+#
+# ── Run ─────────────────────────────────────────────────────────────────────
+#     npm run serve        # demo UI + API at  http://localhost:4321
+#     npm start            # production server (used by Azure)
+#
+# ── Verify it works (no API key / no internet needed) ───────────────────────
+#     npm run criteria         # proves the 5 grading criteria
+#     npm run eval             # runs the 20-prompt dataset -> eval-report.md
+#     npm run test:contracts
+#     npm run test:compiler
+#     npm run test:validation
+#     npm run test:repair
+#     npm run test:runtime
+#
+# ── Dependencies (installed automatically by `npm install`) ─────────────────
+#   runtime:
+#     zod         ^3.23.8     schema / contract validation (the IR)
+#     tsx         ^4.19.2     run TypeScript directly, no build step
+#   dev:
+#     typescript  ^5.6.3      type checking
+#     @types/node ^22.9.0     Node type definitions
+#
+#   No native builds required. SQLite is Node's built-in (node:sqlite) and the
+#   web server uses node:http — both zero external dependencies.
+# ============================================================================
