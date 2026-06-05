@@ -1,0 +1,65 @@
+{
+  "data": {
+    "appName": "CRM",
+    "appType": "CRM",
+    "summary": "A CRM application with user authentication, contact management, a dashboard, role-based access for admins and members, and a premium plan with payment processing and analytics for admins.",
+    "entities": [
+      {
+        "name": "Contact",
+        "fields": [
+          "firstName",
+          "lastName",
+          "email",
+          "phone",
+          "company",
+          "status"
+        ]
+      },
+      {
+        "name": "User",
+        "fields": [
+          "username",
+          "password",
+          "email",
+          "role"
+        ]
+      },
+      {
+        "name": "Plan",
+        "fields": [
+          "name",
+          "price",
+          "features"
+        ]
+      }
+    ],
+    "roles": [
+      "admin",
+      "member"
+    ],
+    "features": [
+      "auth",
+      "dashboard",
+      "roleBasedAccess",
+      "payments",
+      "analytics"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "The CRM will manage contact information.",
+      "Users will have roles such as 'admin' and 'member'.",
+      "The 'premium plan' is a subscription-based payment model.",
+      "Analytics will be accessible to administrators."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"CRM\",\n  \"appType\": \"CRM\",\n  \"summary\": \"A CRM application with user authentication, contact management, a dashboard, role-based access for admins and members, and a premium plan with payment processing and analytics for admins.\",\n  \"entities\": [\n    {\n      \"name\": \"Contact\",\n      \"fields\": [\"firstName\", \"lastName\", \"email\", \"phone\", \"company\", \"status\"]\n    },\n    {\n      \"name\": \"User\",\n      \"fields\": [\"username\", \"password\", \"email\", \"role\"]\n    },\n    {\n      \"name\": \"Plan\",\n      \"fields\": [\"name\", \"price\", \"features\"]\n    }\n  ],\n  \"roles\": [\"admin\", \"member\"],\n  \"features\": [\"auth\", \"dashboard\", \"roleBasedAccess\", \"payments\", \"analytics\"],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"The CRM will manage contact information.\",\n    \"Users will have roles such as 'admin' and 'member'.\",\n    \"The 'premium plan' is a subscription-based payment model.\",\n    \"Analytics will be accessible to administrators.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 438,
+    "outputTokens": 293
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2154
+}

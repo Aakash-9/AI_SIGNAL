@@ -1,0 +1,64 @@
+{
+  "data": {
+    "appName": "Warehouse Inventory Manager",
+    "appType": "inventory management",
+    "summary": "An inventory management system for a warehouse to track products, suppliers, and stock levels, with features for staff to record stock movements and admins to manage suppliers and view low-stock reports.",
+    "entities": [
+      {
+        "name": "product",
+        "fields": [
+          "name",
+          "sku",
+          "description",
+          "quantity",
+          "reorderPoint"
+        ]
+      },
+      {
+        "name": "supplier",
+        "fields": [
+          "name",
+          "contactInfo",
+          "address"
+        ]
+      },
+      {
+        "name": "stockMovement",
+        "fields": [
+          "productId",
+          "quantityChange",
+          "movementType",
+          "timestamp",
+          "userId"
+        ]
+      }
+    ],
+    "roles": [
+      "admin",
+      "staff"
+    ],
+    "features": [
+      "inventoryTracking",
+      "supplierManagement",
+      "stockMovementLogging",
+      "lowStockReporting",
+      "roleBasedAccess"
+    ],
+    "hasAuth": true,
+    "hasPayments": false,
+    "ambiguities": [],
+    "assumptions": [
+      "Each product has a unique identifier (SKU).",
+      "Stock movements include details like the product affected, the change in quantity, the type of movement (e.g., received, shipped, adjusted), and who performed the action.",
+      "Low-stock reports are based on a predefined reorder point for each product."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Warehouse Inventory Manager\",\n  \"appType\": \"inventory management\",\n  \"summary\": \"An inventory management system for a warehouse to track products, suppliers, and stock levels, with features for staff to record stock movements and admins to manage suppliers and view low-stock reports.\",\n  \"entities\": [\n    {\n      \"name\": \"product\",\n      \"fields\": [\"name\", \"sku\", \"description\", \"quantity\", \"reorderPoint\"]\n    },\n    {\n      \"name\": \"supplier\",\n      \"fields\": [\"name\", \"contactInfo\", \"address\"]\n    },\n    {\n      \"name\": \"stockMovement\",\n      \"fields\": [\"productId\", \"quantityChange\", \"movementType\", \"timestamp\", \"userId\"]\n    }\n  ],\n  \"roles\": [\"admin\", \"staff\"],\n  \"features\": [\"inventoryTracking\", \"supplierManagement\", \"stockMovementLogging\", \"lowStockReporting\", \"roleBasedAccess\"],\n  \"hasAuth\": true,\n  \"hasPayments\": false,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Each product has a unique identifier (SKU).\",\n    \"Stock movements include details like the product affected, the change in quantity, the type of movement (e.g., received, shipped, adjusted), and who performed the action.\",\n    \"Low-stock reports are based on a predefined reorder point for each product.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 440,
+    "outputTokens": 329
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1740
+}

@@ -1,0 +1,71 @@
+{
+  "data": {
+    "appName": "SalonBooker",
+    "appType": "booking",
+    "summary": "A booking app for a hair salon where customers can book appointments with stylists for services, staff can manage the schedule, and a premium feature unlocks SMS reminders.",
+    "entities": [
+      {
+        "name": "customer",
+        "fields": [
+          "name",
+          "contactInfo"
+        ]
+      },
+      {
+        "name": "stylist",
+        "fields": [
+          "name",
+          "specialty"
+        ]
+      },
+      {
+        "name": "service",
+        "fields": [
+          "name",
+          "duration",
+          "price"
+        ]
+      },
+      {
+        "name": "appointment",
+        "fields": [
+          "customer",
+          "stylist",
+          "service",
+          "dateTime",
+          "status"
+        ]
+      }
+    ],
+    "roles": [
+      "customer",
+      "stylist",
+      "admin"
+    ],
+    "features": [
+      "auth",
+      "scheduling",
+      "serviceManagement",
+      "staffManagement",
+      "payments",
+      "smsReminders"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "The app will handle user authentication for customers, stylists, and administrators.",
+      "Payments will be processed for services booked.",
+      "SMS reminders are a premium feature that requires a subscription or one-time purchase.",
+      "Staff roles will include stylists and potentially salon administrators."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"SalonBooker\",\n  \"appType\": \"booking\",\n  \"summary\": \"A booking app for a hair salon where customers can book appointments with stylists for services, staff can manage the schedule, and a premium feature unlocks SMS reminders.\",\n  \"entities\": [\n    {\n      \"name\": \"customer\",\n      \"fields\": [\"name\", \"contactInfo\"]\n    },\n    {\n      \"name\": \"stylist\",\n      \"fields\": [\"name\", \"specialty\"]\n    },\n    {\n      \"name\": \"service\",\n      \"fields\": [\"name\", \"duration\", \"price\"]\n    },\n    {\n      \"name\": \"appointment\",\n      \"fields\": [\"customer\", \"stylist\", \"service\", \"dateTime\", \"status\"]\n    }\n  ],\n  \"roles\": [\n    \"customer\",\n    \"stylist\",\n    \"admin\"\n  ],\n  \"features\": [\n    \"auth\",\n    \"scheduling\",\n    \"serviceManagement\",\n    \"staffManagement\",\n    \"payments\",\n    \"smsReminders\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"The app will handle user authentication for customers, stylists, and administrators.\",\n    \"Payments will be processed for services booked.\",\n    \"SMS reminders are a premium feature that requires a subscription or one-time purchase.\",\n    \"Staff roles will include stylists and potentially salon administrators.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 435,
+    "outputTokens": 354
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1370
+}

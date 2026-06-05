@@ -1,0 +1,136 @@
+{
+  "data": {
+    "meta": {
+      "name": "User App",
+      "description": "A basic application to manage users and related data."
+    },
+    "entities": [
+      {
+        "name": "User",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "firstName",
+            "type": "string",
+            "required": true,
+            "label": "First Name"
+          },
+          {
+            "name": "lastName",
+            "type": "string",
+            "required": true,
+            "label": "Last Name"
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "role",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "admin",
+              "member"
+            ],
+            "default": "member"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Administrator role"
+      },
+      {
+        "name": "member",
+        "description": "Standard member role",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "admin",
+        "entity": "User",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "member",
+        "entity": "User",
+        "actions": [
+          "read"
+        ],
+        "scope": "own"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Users",
+        "route": "/users",
+        "type": "list",
+        "entity": "User",
+        "access": [
+          "admin"
+        ],
+        "fields": [
+          "firstName",
+          "lastName",
+          "email",
+          "role"
+        ]
+      },
+      {
+        "name": "New User",
+        "route": "/users/new",
+        "type": "form",
+        "entity": "User",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "My Profile",
+        "route": "/profile",
+        "type": "form",
+        "entity": "User",
+        "access": [
+          "admin",
+          "member"
+        ],
+        "fields": [
+          "firstName",
+          "lastName",
+          "email"
+        ]
+      }
+    ],
+    "plans": [],
+    "businessRules": [
+      {
+        "type": "ownership",
+        "id": "userOwnership",
+        "entity": "User"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"User App\",\n    \"description\": \"A basic application to manage users and related data.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"User\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"firstName\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"label\": \"First Name\"\n        },\n        {\n          \"name\": \"lastName\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"label\": \"Last Name\"\n        },\n        {\n          \"name\": \"email\",\n          \"type\": \"email\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"role\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"admin\",\n            \"member\"\n          ],\n          \"default\": \"member\"\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"admin\",\n      \"description\": \"Administrator role\"\n    },\n    {\n      \"name\": \"member\",\n      \"description\": \"Standard member role\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"admin\",\n      \"entity\": \"User\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"member\",\n      \"entity\": \"User\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Users\",\n      \"route\": \"/users\",\n      \"type\": \"list\",\n      \"entity\": \"User\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"fields\": [\n        \"firstName\",\n        \"lastName\",\n        \"email\",\n        \"role\"\n      ]\n    },\n    {\n      \"name\": \"New User\",\n      \"route\": \"/users/new\",\n      \"type\": \"form\",\n      \"entity\": \"User\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"My Profile\",\n      \"route\": \"/profile\",\n      \"type\": \"form\",\n      \"entity\": \"User\",\n      \"access\": [\n        \"admin\",\n        \"member\"\n      ],\n      \"fields\": [\n        \"firstName\",\n        \"lastName\",\n        \"email\"\n      ]\n    }\n  ],\n  \"plans\": [],\n  \"businessRules\": [\n    {\n      \"type\": \"ownership\",\n      \"id\": \"userOwnership\",\n      \"entity\": \"User\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1836,
+    "outputTokens": 719
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 3145
+}

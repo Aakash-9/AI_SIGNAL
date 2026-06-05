@@ -1,0 +1,87 @@
+{
+  "data": {
+    "appName": "Helpdesk",
+    "appType": "customer support helpdesk",
+    "summary": "A customer support helpdesk application for managing tickets, with features for users, agents, managers, and premium users with SLA tracking.",
+    "entities": [
+      {
+        "name": "ticket",
+        "fields": [
+          "id",
+          "subject",
+          "description",
+          "priority",
+          "status",
+          "createdAt",
+          "updatedAt",
+          "assignedAgentId",
+          "customerId"
+        ]
+      },
+      {
+        "name": "user",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "role"
+        ]
+      },
+      {
+        "name": "analytics",
+        "fields": [
+          "totalTickets",
+          "openTickets",
+          "closedTickets",
+          "averageResponseTime",
+          "slaViolations"
+        ]
+      },
+      {
+        "name": "sla",
+        "fields": [
+          "id",
+          "ticketId",
+          "targetResponseTime",
+          "targetResolutionTime",
+          "startTime",
+          "endTime",
+          "violated"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "agent",
+      "manager",
+      "premiumUser"
+    ],
+    "features": [
+      "ticketManagement",
+      "userManagement",
+      "analytics",
+      "slaTracking",
+      "roleBasedAccess"
+    ],
+    "hasAuth": true,
+    "hasPayments": false,
+    "ambiguities": [
+      "The exact criteria for 'premium' access and how it is granted are not specified."
+    ],
+    "assumptions": [
+      "Users will have accounts to submit tickets.",
+      "Agents will be assigned tickets.",
+      "Managers will have read-only access to analytics.",
+      "Premium users are a subset of users who pay for SLA tracking.",
+      "SLA tracking is a premium feature."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Helpdesk\",\n  \"appType\": \"customer support helpdesk\",\n  \"summary\": \"A customer support helpdesk application for managing tickets, with features for users, agents, managers, and premium users with SLA tracking.\",\n  \"entities\": [\n    {\n      \"name\": \"ticket\",\n      \"fields\": [\"id\", \"subject\", \"description\", \"priority\", \"status\", \"createdAt\", \"updatedAt\", \"assignedAgentId\", \"customerId\"]\n    },\n    {\n      \"name\": \"user\",\n      \"fields\": [\"id\", \"name\", \"email\", \"role\"]\n    },\n    {\n      \"name\": \"analytics\",\n      \"fields\": [\"totalTickets\", \"openTickets\", \"closedTickets\", \"averageResponseTime\", \"slaViolations\"]\n    },\n    {\n      \"name\": \"sla\",\n      \"fields\": [\"id\", \"ticketId\", \"targetResponseTime\", \"targetResolutionTime\", \"startTime\", \"endTime\", \"violated\"]\n    }\n  ],\n  \"roles\": [\"user\", \"agent\", \"manager\", \"premiumUser\"],\n  \"features\": [\"ticketManagement\", \"userManagement\", \"analytics\", \"slaTracking\", \"roleBasedAccess\"],\n  \"hasAuth\": true,\n  \"hasPayments\": false,\n  \"ambiguities\": [\"The exact criteria for 'premium' access and how it is granted are not specified.\"],\n  \"assumptions\": [\n    \"Users will have accounts to submit tickets.\",\n    \"Agents will be assigned tickets.\",\n    \"Managers will have read-only access to analytics.\",\n    \"Premium users are a subset of users who pay for SLA tracking.\",\n    \"SLA tracking is a premium feature.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 440,
+    "outputTokens": 394
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1643
+}

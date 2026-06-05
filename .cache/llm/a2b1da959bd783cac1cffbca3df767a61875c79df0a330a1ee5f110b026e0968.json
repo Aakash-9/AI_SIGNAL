@@ -1,0 +1,42 @@
+{
+  "data": {
+    "name": "TimeEntry",
+    "ownable": true,
+    "fields": [
+      {
+        "name": "startTime",
+        "type": "datetime",
+        "required": true
+      },
+      {
+        "name": "endTime",
+        "type": "datetime"
+      },
+      {
+        "name": "duration",
+        "type": "integer"
+      }
+    ],
+    "relations": [
+      {
+        "name": "task",
+        "kind": "manyToOne",
+        "target": "Task",
+        "required": true
+      },
+      {
+        "name": "user",
+        "kind": "manyToOne",
+        "target": "Project",
+        "required": true
+      }
+    ]
+  },
+  "raw": "{\n  \"name\": \"TimeEntry\",\n  \"ownable\": true,\n  \"fields\": [\n    {\n      \"name\": \"startTime\",\n      \"type\": \"datetime\",\n      \"required\": true\n    },\n    {\n      \"name\": \"endTime\",\n      \"type\": \"datetime\"\n    },\n    {\n      \"name\": \"duration\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"relations\": [\n    {\n      \"name\": \"task\",\n      \"kind\": \"manyToOne\",\n      \"target\": \"Task\",\n      \"required\": true\n    },\n    {\n      \"name\": \"user\",\n      \"kind\": \"manyToOne\",\n      \"target\": \"Project\",\n      \"required\": true\n    }\n  ]\n}",
+  "usage": {
+    "inputTokens": 403,
+    "outputTokens": 184
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1363
+}

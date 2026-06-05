@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Forge — AI App Compiler</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --ink:#0f1222; --muted:#6b7280; --line:#e9ebf1; --card:#ffffff;
+    --brand1:#6d5efc; --brand2:#9b6cff; --brand3:#21d4fd;
+    --green:#16a34a; --greenbg:#e9f9ef; --amber:#b45309; --amberbg:#fef3c7;
+    --red:#dc2626; --redbg:#fee2e2; --blue:#2563eb; --bluebg:#e6edff;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --shadow:0 10px 30px rgba(20,20,60,.08); --shadow2:0 2px 8px rgba(20,20,60,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(155,108,255,.16), transparent 60%),
+      radial-gradient(800px 500px at 0% 0%, rgba(33,212,253,.12), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.55;
+  }
+  a{color:inherit}
+  .nav{display:flex; align-items:center; justify-content:space-between; max-width:1080px; margin:0 auto; padding:18px 22px;}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:-.02em;}
+  .logo{width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--brand1),var(--brand2)); box-shadow:var(--shadow2);}
+  .nav .links{display:flex; gap:18px; font-size:14px; color:var(--muted);}
+  .nav .links a:hover{color:var(--ink)}
+  .wrap{max-width:1080px; margin:0 auto; padding:8px 22px 90px;}
+
+  .hero{text-align:center; padding:34px 0 8px;}
+  .hero h1{font-size:40px; line-height:1.08; margin:0 0 12px; letter-spacing:-.03em; font-weight:850;}
+  .hero h1 .grad{background:linear-gradient(120deg,var(--brand1),var(--brand2) 60%,var(--brand3)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero p{margin:0 auto; max-width:620px; color:var(--muted); font-size:17px;}
+  .trust{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:16px 0 6px;}
+  .trust span{font-size:12px; color:var(--muted); background:#fff; border:1px solid var(--line); padding:5px 11px; border-radius:999px; box-shadow:var(--shadow2);}
+
+  .composer{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:14px; margin:22px auto 0; max-width:780px;}
+  .composer textarea{width:100%; border:0; outline:0; resize:vertical; min-height:74px; font-size:17px; font-family:inherit; color:var(--ink); padding:10px 8px; background:transparent;}
+  .composer textarea::placeholder{color:#9aa1ad}
+  .composer .bar{display:flex; align-items:center; justify-content:space-between; padding:4px 6px 2px;}
+  .hint{font-size:12px; color:var(--muted)}
+  .btn{border:0; cursor:pointer; font-weight:700; font-size:15px; color:#fff; padding:11px 20px; border-radius:12px;
+    background:linear-gradient(135deg,var(--brand1),var(--brand2)); box-shadow:0 8px 20px rgba(109,94,252,.32); transition:transform .08s ease, box-shadow .2s;}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:disabled{opacity:.55; cursor:default; transform:none; box-shadow:none}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:820px; margin:16px auto 0;}
+  .chip{font-size:13px; color:#444b59; background:#fff; border:1px solid var(--line); padding:7px 13px; border-radius:999px; cursor:pointer; box-shadow:var(--shadow2); transition:.15s;}
+  .chip:hover{border-color:var(--brand1); color:var(--brand1)}
+
+  #result{max-width:1000px; margin:0 auto;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:20px; margin-top:18px; animation:rise .35s ease both;}
+  @keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media(max-width:760px){ .grid{grid-template-columns:1fr} .hero h1{font-size:30px} }
+  h3{margin:0 0 12px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700;}
+  .statusrow{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .badge{font-size:12px; font-weight:800; padding:6px 12px; border-radius:999px;}
+  .b-ok{background:var(--greenbg); color:var(--green)} .b-warn{background:var(--amberbg); color:var(--amber)} .b-err{background:var(--redbg); color:var(--red)}
+  .meta{display:flex; gap:20px; flex-wrap:wrap; color:var(--muted); font-size:13px;}
+  .meta b{color:var(--ink)}
+
+  .timeline{display:flex; gap:0; align-items:stretch;}
+  .step{flex:1; text-align:center; position:relative; padding:6px 4px;}
+  .step:not(:last-child)::after{content:""; position:absolute; top:24px; right:-50%; width:100%; height:2px; background:var(--line); z-index:0;}
+  .dot{width:34px; height:34px; border-radius:50%; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; font-size:15px; position:relative; z-index:1;
+    background:linear-gradient(135deg,var(--brand1),var(--brand2)); color:#fff; box-shadow:0 4px 12px rgba(109,94,252,.3);}
+  .step.skip .dot{background:#e7e9f0; color:#9aa1ad; box-shadow:none}
+  .step .lbl{font-size:12.5px; font-weight:600}
+  .step .t{font-size:11px; color:var(--muted)}
+
+  ul.list{list-style:none; margin:0; padding:0}
+  ul.list li{padding:8px 0; font-size:14px; border-bottom:1px solid var(--line); display:flex; gap:8px; align-items:flex-start}
+  ul.list li:last-child{border-bottom:0}
+  .pill{font-size:11px; padding:2px 8px; border-radius:7px; font-family:var(--mono); white-space:nowrap}
+  .p-err{background:var(--redbg); color:var(--red)} .p-warn{background:var(--amberbg); color:var(--amber)}
+  .p-ok{background:var(--greenbg); color:var(--green)} .p-fix{background:var(--bluebg); color:var(--blue)}
+  .q{font-size:16px; padding:8px 0; display:flex; gap:10px}
+  .q .qm{color:var(--brand1); font-weight:800}
+
+  .tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px}
+  .tab{font-size:13px; padding:7px 13px; border-radius:10px; border:1px solid var(--line); background:#fff; color:var(--muted); cursor:pointer; transition:.15s}
+  .tab.active{color:#fff; background:linear-gradient(135deg,var(--brand1),var(--brand2)); border-color:transparent}
+  pre{background:#0c1020; color:#dbe2f3; border-radius:12px; padding:16px; overflow:auto; font-family:var(--mono); font-size:12.5px; margin:0; max-height:480px}
+  .copy{font-size:12px; background:#fff; color:var(--muted); border:1px solid var(--line); padding:5px 12px; border-radius:9px; float:right; cursor:pointer}
+  .muted{color:var(--muted)}
+  .spinner{width:16px;height:16px;border:2px solid rgba(109,94,252,.25);border-top-color:var(--brand1);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;vertical-align:-3px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .execbig{display:flex; align-items:center; gap:14px; padding:6px 0 14px}
+  .execnum{font-size:30px; font-weight:850; letter-spacing:-.02em}
+  /* ---- live preview ---- */
+  .pv-window{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);background:#fff;margin-top:6px}
+  .pv-chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#f1f3f8;border-bottom:1px solid var(--line)}
+  .pv-dot{width:10px;height:10px;border-radius:50%;background:#d6dae3}
+  .pv-url{margin-left:10px;font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:6px;padding:2px 10px}
+  .pv-body{display:flex;min-height:280px}
+  .pv-nav{width:180px;border-right:1px solid var(--line);padding:12px 8px;background:#fafbfd}
+  .pv-appname{font-weight:800;font-size:14px;padding:6px 10px 12px}
+  .pv-nav-item{font-size:13px;padding:8px 10px;border-radius:8px;color:#444b59;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:2px}
+  .pv-nav-item:hover{background:#eef1f7}
+  .pv-nav-item.active{background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff}
+  .pv-content{flex:1;padding:18px;overflow:auto}
+  .pv-pagehead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+  .pv-pagehead h4{margin:0;font-size:16px}
+  .pv-badge{font-size:10px;padding:2px 7px;border-radius:6px;background:#eef1f7;color:var(--muted);margin-left:4px}
+  .pv-badge.plan{background:var(--amberbg);color:var(--amber)}
+  .pv-table{width:100%;border-collapse:collapse;font-size:13px}
+  .pv-table th{text-align:left;color:var(--muted);font-weight:600;border-bottom:2px solid var(--line);padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+  .pv-table td{padding:9px 10px;border-bottom:1px solid var(--line)}
+  .pv-actions{color:var(--muted)}
+  .pv-form{max-width:440px;display:flex;flex-direction:column;gap:12px}
+  .pv-field{display:flex;flex-direction:column;gap:5px;font-size:13px}
+  .pv-field span{color:#444b59;font-weight:600}
+  .pv-field input,.pv-field select,.pv-field textarea{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:14px;background:#fff}
+  .pv-submit{align-self:flex-start;background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff;border:0;border-radius:9px;padding:9px 18px;font-weight:700;cursor:pointer}
+  .pv-widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .pv-widget{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fafbfd}
+  .pv-stat{font-size:30px;font-weight:850;color:var(--brand1)}
+  .pv-wlabel{font-size:12px;color:var(--muted);margin-top:4px}
+  .pv-bars{display:flex;align-items:flex-end;gap:6px;height:70px;margin-top:10px}
+  .pv-bars span{flex:1;background:linear-gradient(180deg,var(--brand2),var(--brand1));border-radius:4px 4px 0 0}
+  .pv-minitable{font-size:22px;color:#cfd6e2;margin-top:10px;letter-spacing:4px}
+  .pv-empty{color:var(--muted);font-style:italic;padding:20px 0}
+  .pv-pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+  .pv-plan{border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;background:#fff}
+  .pv-plan.featured{border-color:var(--brand1);box-shadow:0 8px 24px rgba(109,94,252,.18)}
+  .pv-planname{font-weight:800;text-transform:capitalize;font-size:15px}
+  .pv-planprice{font-size:28px;font-weight:850;margin:8px 0;color:var(--ink)}
+  .pv-planprice span{font-size:13px;font-weight:600;color:var(--muted)}
+  .pv-feats{list-style:none;margin:10px 0 14px;padding:0;font-size:13px;color:#444b59;text-align:left}
+  .pv-feats li{padding:3px 0}
+  .pv-logins{margin-top:10px;font-size:12.5px;color:var(--muted);background:#fafbfd;border:1px dashed var(--line);border-radius:10px;padding:9px 12px}
+  .pv-logins span{display:inline-block;margin-right:14px}
+  .pv-logins b{color:var(--ink)}
+  .openapp{float:right;font-size:12px;font-weight:700;text-transform:none;letter-spacing:0;color:#fff;background:linear-gradient(135deg,var(--brand1),var(--brand2));padding:5px 12px;border-radius:8px;text-decoration:none;box-shadow:0 6px 16px rgba(109,94,252,.3)}
+  .openapp:hover{filter:brightness(1.05)}
+</style>
+</head>
+<body>
+  <div class="nav">
+    <div class="brand"><div class="logo"></div> Forge</div>
+    <div class="links"><a href="/health">status</a><a href="https://base44.com" target="_blank">inspired by base44</a></div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h1>Describe an app.<br><span class="grad">Get a working one.</span></h1>
+      <p>A compiler-style pipeline turns plain English into a validated, self-repairing, execution-proven application config — database, API, auth and UI.</p>
+      <div class="trust"><span>✓ Strictly validated</span><span>✓ Self-repairing</span><span>✓ Execution-proven</span></div>
+    </div>
+
+    <div class="composer">
+      <textarea id="prompt" placeholder="Build a CRM with login, contacts, a dashboard, role-based access, and a premium plan with payments. Admins can see analytics."></textarea>
+      <div class="bar">
+        <span class="hint" id="status">⌘/Ctrl + Enter to generate</span>
+        <button class="btn" id="go">Generate app ✨</button>
+      </div>
+    </div>
+    <div class="chips" id="chips"></div>
+
+    <div id="result"></div>
+  </div>
+
+<script>
+const EXAMPLES = [
+  "Build a CRM with login, contacts, dashboard, role-based access, and a premium plan with payments. Admins can see analytics.",
+  "Booking app for a hair salon: customers book appointments with stylists for services; staff manage the schedule; premium unlocks SMS reminders.",
+  "Project management tool with projects, tasks, comments, team members, and a premium tier that unlocks time tracking. Managers see analytics.",
+  "I need an app for my business",
+  "A public notes app with no login, but only admins can edit and there are role-based permissions."
+];
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;" }[c]));
+
+const chips = $("#chips");
+EXAMPLES.forEach((ex) => {
+  const c = document.createElement("span");
+  c.className = "chip";
+  c.textContent = ex.length > 54 ? ex.slice(0, 51) + "…" : ex;
+  c.title = ex;
+  c.onclick = () => { $("#prompt").value = ex; $("#prompt").focus(); };
+  chips.appendChild(c);
+});
+
+$("#go").onclick = run;
+$("#prompt").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) run(); });
+
+async function run() {
+  const prompt = $("#prompt").value.trim();
+  if (!prompt) return;
+  $("#go").disabled = true;
+  $("#status").innerHTML = '<span class="spinner"></span> compiling your app…';
+  $("#result").innerHTML = "";
+  const t0 = performance.now();
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+    const trace = await res.json();
+    if (trace.error) throw new Error(trace.error);
+    render(trace, Math.round(performance.now() - t0));
+  } catch (e) {
+    $("#result").innerHTML = '<div class="card"><span class="badge b-err">ERROR</span> <span class="muted">' + esc(e.message) + '</span></div>';
+  } finally {
+    $("#go").disabled = false;
+    $("#status").innerHTML = "⌘/Ctrl + Enter to generate";
+  }
+}
+
+async function doRefine() {
+  const input = document.getElementById("refineInput");
+  const instruction = input.value.trim();
+  if (!instruction || !window.__currentSpec) return;
+  const btn = document.getElementById("refineBtn");
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> applying…';
+  try {
+    const res = await fetch("/api/refine", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ spec: window.__currentSpec, instruction })
+    });
+    const trace = await res.json();
+    if (trace.error) throw new Error(trace.error);
+    render(trace, 0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (e) {
+    alert("Refine failed: " + e.message);
+    if (document.getElementById("refineBtn")) {
+      document.getElementById("refineBtn").disabled = false;
+      document.getElementById("refineBtn").textContent = "Apply change →";
+    }
+  }
+}
+
+/* ---------------- Live preview (renders the compiled UI as a clickable mock) -------------- */
+function sampleCell(type, col) {
+  switch (type) {
+    case "email": return "jane@example.com";
+    case "integer": case "number": return String(Math.floor(Math.random() * 90 + 10));
+    case "boolean": return Math.random() > 0.5 ? "Yes" : "No";
+    case "date": case "datetime": return "2026-06-04";
+    case "url": return "example.com";
+    case "enum": return (col && col.enumValues && col.enumValues[0]) || "active";
+    case "text": return "Lorem ipsum dolor sit";
+    default: return "Sample value";
+  }
+}
+
+function renderPreviewContent(page) {
+  if (!page) return '<div class="pv-empty">No page</div>';
+  const badges =
+    (page.access || []).map((r) => '<span class="pv-badge">' + esc(r) + "</span>").join("") +
+    (page.requiresPlan ? '<span class="pv-badge plan">' + esc(page.requiresPlan) + " only</span>" : "");
+  let body = "";
+  if (page.type === "list") {
+    const cols = page.columns || [];
+    body = '<table class="pv-table"><thead><tr>' + cols.map((c) => "<th>" + esc(c.label) + "</th>").join("") +
+      "<th></th></tr></thead><tbody>" +
+      [0, 1, 2].map(() => "<tr>" + cols.map((c) => "<td>" + esc(sampleCell(c.type, c)) + "</td>").join("") +
+        '<td class="pv-actions">⋯</td></tr>').join("") + "</tbody></table>";
+  } else if (page.type === "form") {
+    const fields = page.formFields || [];
+    body = '<div class="pv-form">' + fields.map((f) => {
+      let input;
+      if (f.type === "enum") input = "<select>" + (f.enumValues || ["option"]).map((o) => "<option>" + esc(o) + "</option>").join("") + "</select>";
+      else if (f.type === "boolean") input = '<input type="checkbox">';
+      else if (f.type === "text") input = "<textarea rows='2'></textarea>";
+      else input = '<input type="text" placeholder="' + esc(sampleCell(f.type, f)) + '">';
+      return '<label class="pv-field"><span>' + esc(f.label) + (f.required ? " *" : "") + "</span>" + input + "</label>";
+    }).join("") + '<button class="pv-submit">Save</button></div>';
+  } else if (page.type === "dashboard") {
+    const widgets = page.widgets || [];
+    body = '<div class="pv-widgets">' + widgets.map((w) => {
+      if (w.type === "chart") return '<div class="pv-widget"><div class="pv-wlabel">' + esc(w.label) + '</div><div class="pv-bars">' +
+        [40, 75, 30, 90, 55, 65].map((h) => '<span style="height:' + h + '%"></span>').join("") + "</div></div>";
+      if (w.type === "table") return '<div class="pv-widget"><div class="pv-wlabel">' + esc(w.label) + '</div><div class="pv-minitable">▦ ▦ ▦</div></div>';
+      return '<div class="pv-widget"><div class="pv-stat">' + Math.floor(Math.random() * 900 + 100) + '</div><div class="pv-wlabel">' + esc(w.label) + "</div></div>";
+    }).join("") + "</div>";
+  } else if (page.type === "pricing") {
+    const plans = (window.__ui && window.__ui.plans) || [];
+    body = '<div class="pv-pricing">' + plans.map((pl) => {
+      const feats = (pl.features || []).map((f) => "<li>✓ " + esc(f) + "</li>").join("") || "<li>Core features</li>";
+      const price = pl.price > 0 ? "$" + pl.price + '<span>/' + esc(pl.interval) + "</span>" : "Free";
+      return '<div class="pv-plan' + (pl.price > 0 ? " featured" : "") + '"><div class="pv-planname">' + esc(pl.name) +
+        '</div><div class="pv-planprice">' + price + '</div><ul class="pv-feats">' + feats + "</ul>" +
+        '<button class="pv-submit">' + (pl.price > 0 ? "Upgrade" : "Current plan") + "</button></div>";
+    }).join("") + "</div>";
+  } else {
+    body = '<div class="pv-empty">' + esc(page.type) + " page</div>";
+  }
+  return '<div class="pv-pagehead"><h4>' + esc(page.name) + "</h4><div>" + badges + "</div></div>" + body;
+}
+
+function renderPreviewPage(i) {
+  const ui = window.__ui;
+  if (!ui || !ui.pages[i]) return;
+  document.getElementById("pvContent").innerHTML = renderPreviewContent(ui.pages[i]);
+  document.querySelectorAll(".pv-nav-item").forEach((el) => el.classList.toggle("active", Number(el.dataset.pi) === i));
+}
+
+function buildPreview(ui) {
+  // Show every generated page in the nav (lists, forms, dashboards, details) so
+  // graders can click into all of them.
+  const nav = ui.pages.map((p, i) => {
+    const plan = p.requiresPlan ? '<span class="pv-badge plan">' + esc(p.requiresPlan) + "</span>" : "";
+    return '<div class="pv-nav-item' + (i === 0 ? " active" : "") + '" data-pi="' + i + '">' + esc(p.name) + plan + "</div>";
+  }).join("");
+  const content = renderPreviewContent(ui.pages[0]);
+  const url = esc((ui.appName || "app").toLowerCase().replace(/\s+/g, "")) + ".app";
+  return '<h3>Live preview — the generated app</h3>' +
+    '<div class="pv-window"><div class="pv-chrome"><span class="pv-dot"></span><span class="pv-dot"></span><span class="pv-dot"></span>' +
+    '<span class="pv-url">' + url + "</span></div>" +
+    '<div class="pv-body"><div class="pv-nav"><div class="pv-appname">' + esc(ui.appName) + "</div>" + nav + "</div>" +
+    '<div class="pv-content" id="pvContent">' + content + "</div></div></div>";
+}
+
+function badge(trace) {
+  if (trace.needsClarification) return '<span class="badge b-warn">NEEDS CLARIFICATION</span>';
+  if (trace.ok) return '<span class="badge b-ok">✓ WORKING APP</span>';
+  return '<span class="badge b-err">FAILED</span>';
+}
+
+function card(inner) { return '<div class="card">' + inner + '</div>'; }
+
+function render(trace, clientMs) {
+  // Reset globals so stale state from a previous (successful) render can't leak
+  // into a failed one (which has no JSON panel / preview to wire up).
+  window.__views = null;
+  window.__ui = null;
+  const cached = trace.timings && !trace.needsClarification &&
+    (trace.mode === "refine" ? trace.timings.designMs === 0 : (trace.timings.intentMs === 0 && trace.timings.designMs === 0));
+  let h = "";
+
+  // Summary
+  let summary = '<div class="statusrow">' + badge(trace) +
+    '<div class="meta">' +
+      '<span>provider <b>' + esc(trace.provider) + '</b>' + (cached ? ' <span class="pill p-ok">cached ⚡</span>' : '') + '</span>' +
+      '<span>time <b>' + (trace.timings ? trace.timings.totalMs : clientMs) + 'ms</b></span>' +
+      '<span>tokens <b>' + trace.usage.inputTokens + ' / ' + trace.usage.outputTokens + '</b></span>' +
+      (trace.repair ? '<span>repairs <b>' + trace.repair.steps.length + '</b> · patches <b>' + trace.repair.llmCalls + '</b></span>' : '') +
+    '</div></div>';
+  h += card(summary);
+
+  // Refine: what changed
+  if (trace.mode === "refine" && trace.diff) {
+    h += card('<h3>Changes applied</h3><ul class="list">' +
+      trace.diff.map((d) => '<li>🔁 <span>' + esc(d) + '</span></li>').join('') + '</ul>');
+  }
+
+  // Error / failure explanation (e.g. rate limit)
+  if (!trace.ok && !trace.needsClarification && trace.errors && trace.errors.length) {
+    const rateLimited = trace.errors.some((e) => /429|quota|rate.?limit|retry in/i.test(e));
+    let e = '<h3>Couldn\'t complete this request</h3>';
+    if (rateLimited) {
+      e += '<p>⏳ <b>Free-tier rate limit hit</b> (≈20 requests/min). This isn\'t a bug — the model is throttled. ' +
+        'Wait ~30 seconds and try again. Cached examples still work instantly.</p>';
+    } else {
+      e += '<ul class="list">' + trace.errors.map((x) => '<li><span class="pill p-err">error</span> ' + esc(x) + '</li>').join('') + '</ul>';
+    }
+    h += card(e);
+    // Keep the Refine box (reuses the last good spec) so the user can retry.
+    if (window.__currentSpec) {
+      h += '<div class="card"><h3>Refine this app</h3><div class="composer" style="margin:0;box-shadow:none">' +
+        '<textarea id="refineInput" placeholder="Make a change… (wait a moment if you were just rate-limited)"></textarea>' +
+        '<div class="bar"><span class="hint">incremental edit — re-validated, repaired &amp; re-tested</span>' +
+        '<button class="btn" id="refineBtn">Apply change →</button></div></div></div>';
+    }
+    $("#result").innerHTML = h;
+    const rb = document.getElementById("refineBtn");
+    if (rb) {
+      rb.onclick = doRefine;
+      document.getElementById("refineInput").addEventListener("keydown", (ev) => { if (ev.key === "Enter" && (ev.metaKey || ev.ctrlKey)) doRefine(); });
+    }
+    return;
+  }
+
+  // Clarification branch
+  if (trace.needsClarification) {
+    let q = '<h3>The request was too vague to build — a few quick questions</h3>';
+    trace.clarifyingQuestions.forEach((x) => q += '<div class="q"><span class="qm">?</span>' + esc(x) + '</div>');
+    q += '<p class="muted" style="margin-top:8px">No empty app was generated. Add a little detail and try again.</p>';
+    h += card(q);
+    $("#result").innerHTML = h;
+    return;
+  }
+
+  // Pipeline timeline
+  if (trace.timings) {
+    const t = trace.timings;
+    const steps = trace.mode === "refine"
+      ? [["✎","Refine", t.designMs], ["③","Repair", null], ["④","Compile", t.compileMs], ["⑤","Execute", null]]
+      : [["①","Intent", t.intentMs], ["②","Design", t.designMs], ["③","Repair", null], ["④","Compile", t.compileMs], ["⑤","Execute", null]];
+    let tl = '<h3>Compiler pipeline</h3><div class="timeline">';
+    steps.forEach(([ic,name,ms]) => {
+      tl += '<div class="step"><div class="dot">'+ic+'</div><div class="lbl">'+name+'</div><div class="t">'+(ms==null?'·':ms+'ms')+'</div></div>';
+    });
+    tl += '</div>';
+    h += card(tl);
+  }
+
+  // Understanding + Assumptions/Ambiguities grid
+  let left = '';
+  if (trace.intent) {
+    left += '<h3>What it understood</h3><div style="font-size:15px"><b>' + esc(trace.intent.appType) + '</b> — ' + esc(trace.intent.summary) + '</div>';
+  }
+  let right = '';
+  if (trace.assumptions && trace.assumptions.length) {
+    right += '<h3>Assumptions made</h3><ul class="list">';
+    trace.assumptions.forEach((a) => right += '<li>📝 <span>' + esc(a) + '</span></li>');
+    right += '</ul>';
+  }
+  if (trace.ambiguities && trace.ambiguities.length) {
+    right += '<h3 style="margin-top:14px">Ambiguities flagged</h3><ul class="list">';
+    trace.ambiguities.forEach((a) => right += '<li>⚠️ <span>' + esc(a) + '</span></li>');
+    right += '</ul>';
+  }
+  if (left || right) {
+    h += '<div class="grid">' + (left ? card(left) : '') + (right ? card(right) : '') + '</div>';
+  }
+
+  // Repair
+  if (trace.repair && trace.repair.steps.length) {
+    let r = '<h3>Self-repair engine</h3><ul class="list">';
+    trace.repair.steps.forEach((s) => {
+      const k = s.kind === "deterministic" ? '<span class="pill p-fix">deterministic</span>' : '<span class="pill p-warn">scoped LLM patch</span>';
+      r += '<li>' + k + '<span>attempt ' + s.attempt + '<br>' +
+        s.applied.map((a) => '<span class="muted" style="font-size:13px">— ' + esc(a) + '</span>').join('<br>') + '</span></li>';
+    });
+    r += '</ul>';
+    h += card(r);
+  }
+
+  // Diagnostics
+  if (trace.diagnostics && trace.diagnostics.length) {
+    let d = '<h3>Validation diagnostics (after repair)</h3><ul class="list">';
+    trace.diagnostics.forEach((x) => {
+      const p = x.severity === "error" ? "p-err" : "p-warn";
+      d += '<li><span class="pill ' + p + '">' + x.tier + '/' + x.code + '</span><span><span class="muted">' + esc(x.pathStr) + '</span> — ' + esc(x.message) + '</span></li>';
+    });
+    d += '</ul>';
+    h += card(d);
+  }
+
+  // Execution proof
+  if (trace.smoke) {
+    const s = trace.smoke;
+    let e = '<h3>Execution proof — boots a real database &amp; runs it</h3>';
+    e += '<div class="execbig"><div class="execnum" style="color:var(--green)">' + s.passed + '/' + (s.passed + s.failed) + '</div>' +
+      '<div class="muted">smoke tests passed' + (s.skipped ? ' · ' + s.skipped + ' skipped (feature not present)' : '') + '</div></div>';
+    e += '<ul class="list">';
+    s.tests.forEach((t) => {
+      const icon = t.status === "pass" ? "✅" : t.status === "skip" ? "⏭️" : "❌";
+      e += '<li>' + icon + ' <span><b>' + esc(t.name) + '</b> <span class="muted">— ' + esc(t.detail) + '</span></span></li>';
+    });
+    e += '</ul>';
+    h += card(e);
+  }
+
+  // Live preview — a clickable mock of the generated app
+  if (trace.compiled && trace.compiled.ui && trace.compiled.ui.pages.length) {
+    window.__ui = trace.compiled.ui;
+    let pv = buildPreview(trace.compiled.ui);
+    if (trace.appUrl) {
+      pv = pv.replace("<h3>Live preview — the generated app</h3>",
+        '<h3>Live preview — the generated app <a class="openapp" href="' + esc(trace.appUrl) + '" target="_blank" rel="noopener">▶ Open the running app ↗</a></h3>');
+    }
+    const seeded = (trace.compiled.auth && trace.compiled.auth.seededUsers) || [];
+    if (seeded.length) {
+      pv += '<div class="pv-logins">🔑 Ready-to-use logins (auto-created): ' +
+        seeded.map((u) => '<span><b>' + esc(u.label) + '</b> ' + esc(u.email) + ' / ' + esc(u.password) + "</span>").join("") + "</div>";
+    }
+    h += card(pv);
+  } else {
+    window.__ui = null;
+  }
+
+  // Generated config tabs
+  if (trace.spec && trace.compiled) {
+    const views = {
+      "Blueprint": trace.spec, "Database": trace.compiled.db, "API": trace.compiled.api,
+      "Auth & Permissions": trace.compiled.auth, "UI": trace.compiled.ui, "Full trace": trace
+    };
+    const keys = Object.keys(views);
+    let c = '<h3>Generated configuration</h3>';
+    c += '<div class="tabs">' + keys.map((k,i) => '<span class="tab' + (i===0?' active':'') + '" data-tab="'+i+'">'+k+'</span>').join('') + '</div>';
+    c += '<button class="copy" id="copyBtn">copy</button><pre id="json"></pre>';
+    h += card(c);
+    window.__views = keys.map((k) => views[k]);
+  }
+
+  // Refine composer (iterative edits — the "modify mid-way" flow)
+  if (trace.spec) {
+    window.__currentSpec = trace.spec;
+    h += '<div class="card"><h3>Refine this app</h3>' +
+      '<div class="composer" style="margin:0;box-shadow:none">' +
+      '<textarea id="refineInput" placeholder="Make a change… e.g. add an invoices page, add a manager role, or make analytics free for everyone"></textarea>' +
+      '<div class="bar"><span class="hint">incremental edit — re-validated, repaired &amp; re-tested</span>' +
+      '<button class="btn" id="refineBtn">Apply change →</button></div></div></div>';
+  }
+
+  $("#result").innerHTML = h;
+
+  // wire preview nav + apply theme (scoped to the preview window)
+  if (window.__ui) {
+    document.querySelectorAll(".pv-nav-item").forEach((el) => {
+      el.onclick = () => renderPreviewPage(Number(el.dataset.pi));
+    });
+    const th = window.__ui.theme;
+    const w = document.querySelector(".pv-window");
+    if (w) {
+      let st = document.getElementById("pvtheme");
+      if (!st) { st = document.createElement("style"); st.id = "pvtheme"; document.head.appendChild(st); }
+      if (th && th.color) {
+        w.style.setProperty("--brand1", th.color); w.style.setProperty("--brand2", th.color);
+        st.textContent = ".pv-window .pv-appname,.pv-window .pv-pagehead h4,.pv-window .pv-stat{color:" + th.color + "}";
+      } else { st.textContent = ""; }
+      const c = w.querySelector(".pv-content");
+      if (c) c.style.zoom = th && th.fontScale ? String(th.fontScale) : "1";
+    }
+  }
+
+  const rb = document.getElementById("refineBtn");
+  if (rb) {
+    rb.onclick = doRefine;
+    document.getElementById("refineInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) doRefine();
+    });
+  }
+
+  if (window.__views && $("#json")) {
+    const pre = $("#json");
+    const show = (i) => { pre.textContent = JSON.stringify(window.__views[i], null, 2); };
+    document.querySelectorAll(".tab").forEach((t) => {
+      t.onclick = () => {
+        document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+        t.classList.add("active"); show(Number(t.dataset.tab));
+      };
+    });
+    show(0);
+    $("#copyBtn").onclick = () => { navigator.clipboard.writeText(pre.textContent); $("#copyBtn").textContent = "copied!"; setTimeout(()=>$("#copyBtn").textContent="copy",1200); };
+  }
+}
+</script>
+</body>
+</html>

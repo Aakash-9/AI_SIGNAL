@@ -1,0 +1,94 @@
+{
+  "data": {
+    "appName": "Online Learning Platform",
+    "appType": "e-learning",
+    "summary": "An online learning platform where instructors publish courses and students enroll, complete lessons, and provide reviews, with a freemium model offering access to paid courses and certificates via a premium subscription.",
+    "entities": [
+      {
+        "name": "course",
+        "fields": [
+          "title",
+          "description",
+          "instructorId",
+          "price",
+          "isFree"
+        ]
+      },
+      {
+        "name": "lesson",
+        "fields": [
+          "title",
+          "videoUrl",
+          "courseId"
+        ]
+      },
+      {
+        "name": "enrollment",
+        "fields": [
+          "userId",
+          "courseId",
+          "enrollmentDate"
+        ]
+      },
+      {
+        "name": "lessonCompletion",
+        "fields": [
+          "userId",
+          "lessonId",
+          "completionDate"
+        ]
+      },
+      {
+        "name": "review",
+        "fields": [
+          "userId",
+          "courseId",
+          "rating",
+          "comment"
+        ]
+      },
+      {
+        "name": "subscription",
+        "fields": [
+          "userId",
+          "startDate",
+          "endDate",
+          "planType"
+        ]
+      }
+    ],
+    "roles": [
+      "instructor",
+      "student",
+      "premium_subscriber"
+    ],
+    "features": [
+      "courseManagement",
+      "lessonManagement",
+      "studentEnrollment",
+      "lessonCompletionTracking",
+      "courseReviews",
+      "instructorDashboard",
+      "paymentProcessing",
+      "subscriptionManagement",
+      "certificateGeneration"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "Users will have distinct roles of 'instructor' and 'student'.",
+      "A 'premium subscription' implies a recurring payment model.",
+      "Completion certificates are generated upon completion of all lessons in a paid course.",
+      "Course ratings are numerical (e.g., 1-5 stars)."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Online Learning Platform\",\n  \"appType\": \"e-learning\",\n  \"summary\": \"An online learning platform where instructors publish courses and students enroll, complete lessons, and provide reviews, with a freemium model offering access to paid courses and certificates via a premium subscription.\",\n  \"entities\": [\n    {\n      \"name\": \"course\",\n      \"fields\": [\"title\", \"description\", \"instructorId\", \"price\", \"isFree\"]\n    },\n    {\n      \"name\": \"lesson\",\n      \"fields\": [\"title\", \"videoUrl\", \"courseId\"]\n    },\n    {\n      \"name\": \"enrollment\",\n      \"fields\": [\"userId\", \"courseId\", \"enrollmentDate\"]\n    },\n    {\n      \"name\": \"lessonCompletion\",\n      \"fields\": [\"userId\", \"lessonId\", \"completionDate\"]\n    },\n    {\n      \"name\": \"review\",\n      \"fields\": [\"userId\", \"courseId\", \"rating\", \"comment\"]\n    },\n    {\n      \"name\": \"subscription\",\n      \"fields\": [\"userId\", \"startDate\", \"endDate\", \"planType\"]\n    }\n  ],\n  \"roles\": [\"instructor\", \"student\", \"premium_subscriber\"],\n  \"features\": [\n    \"courseManagement\",\n    \"lessonManagement\",\n    \"studentEnrollment\",\n    \"lessonCompletionTracking\",\n    \"courseReviews\",\n    \"instructorDashboard\",\n    \"paymentProcessing\",\n    \"subscriptionManagement\",\n    \"certificateGeneration\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Users will have distinct roles of 'instructor' and 'student'.\",\n    \"A 'premium subscription' implies a recurring payment model.\",\n    \"Completion certificates are generated upon completion of all lessons in a paid course.\",\n    \"Course ratings are numerical (e.g., 1-5 stars).\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 476,
+    "outputTokens": 458
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1886
+}

@@ -1,0 +1,40 @@
+{
+  "data": {
+    "appName": "Todo App",
+    "appType": "task tracker",
+    "summary": "A simple application to manage personal tasks.",
+    "entities": [
+      {
+        "name": "task",
+        "fields": [
+          "title",
+          "description",
+          "dueDate",
+          "completed"
+        ]
+      }
+    ],
+    "roles": [],
+    "features": [],
+    "hasAuth": false,
+    "hasPayments": false,
+    "ambiguities": [],
+    "assumptions": [
+      "The app is for personal use and does not require multiple users or collaboration features.",
+      "Tasks do not need to be assigned to specific users.",
+      "No advanced features like recurring tasks, priorities, or tags are needed initially."
+    ],
+    "clarifyingQuestions": [
+      "Will this app be for personal use or for multiple users/teams?",
+      "Are there any specific fields you'd like to track for each task beyond title, description, and completion status?",
+      "Do you need features like task prioritization, categories, or due dates?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"Todo App\",\n  \"appType\": \"task tracker\",\n  \"summary\": \"A simple application to manage personal tasks.\",\n  \"entities\": [\n    {\n      \"name\": \"task\",\n      \"fields\": [\n        \"title\",\n        \"description\",\n        \"dueDate\",\n        \"completed\"\n      ]\n    }\n  ],\n  \"roles\": [],\n  \"features\": [],\n  \"hasAuth\": false,\n  \"hasPayments\": false,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"The app is for personal use and does not require multiple users or collaboration features.\",\n    \"Tasks do not need to be assigned to specific users.\",\n    \"No advanced features like recurring tasks, priorities, or tags are needed initially.\"\n  ],\n  \"clarifyingQuestions\": [\n    \"Will this app be for personal use or for multiple users/teams?\",\n    \"Are there any specific fields you'd like to track for each task beyond title, description, and completion status?\",\n    \"Do you need features like task prioritization, categories, or due dates?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 413,
+    "outputTokens": 256
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1584
+}

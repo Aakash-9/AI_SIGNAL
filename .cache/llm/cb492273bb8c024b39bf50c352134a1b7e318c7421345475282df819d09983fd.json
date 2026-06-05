@@ -1,0 +1,301 @@
+{
+  "data": {
+    "meta": {
+      "name": "Warehouse Inventory Manager",
+      "description": "An inventory management system for a warehouse to track products, suppliers, and stock levels, with features for staff to record stock movements and admins to manage suppliers and view low-stock reports."
+    },
+    "entities": [
+      {
+        "name": "Product",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "sku",
+            "type": "string",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "quantity",
+            "type": "integer",
+            "required": true,
+            "default": 0
+          },
+          {
+            "name": "reorderPoint",
+            "type": "integer",
+            "required": true,
+            "default": 0
+          }
+        ]
+      },
+      {
+        "name": "Supplier",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contactInfo",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "name": "StockMovement",
+        "fields": [
+          {
+            "name": "quantityChange",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "movementType",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "received",
+              "shipped",
+              "adjusted"
+            ]
+          },
+          {
+            "name": "timestamp",
+            "type": "datetime",
+            "required": true,
+            "default": "now()"
+          }
+        ],
+        "relations": [
+          {
+            "name": "product",
+            "kind": "manyToOne",
+            "target": "Product",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Manages suppliers and views reports."
+      },
+      {
+        "name": "staff",
+        "description": "Records stock movements.",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "staff",
+        "entity": "Product",
+        "actions": [
+          "read"
+        ]
+      },
+      {
+        "role": "staff",
+        "entity": "StockMovement",
+        "actions": [
+          "create",
+          "read"
+        ]
+      },
+      {
+        "role": "admin",
+        "entity": "Product",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      },
+      {
+        "role": "admin",
+        "entity": "Supplier",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      },
+      {
+        "role": "admin",
+        "entity": "StockMovement",
+        "actions": [
+          "read"
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "name": "Products",
+        "route": "/products",
+        "type": "list",
+        "entity": "Product",
+        "access": [
+          "admin",
+          "staff"
+        ],
+        "fields": [
+          "name",
+          "sku",
+          "quantity",
+          "reorderPoint"
+        ]
+      },
+      {
+        "name": "Product Detail",
+        "route": "/products/:id",
+        "type": "detail",
+        "entity": "Product",
+        "access": [
+          "admin",
+          "staff"
+        ]
+      },
+      {
+        "name": "New Product",
+        "route": "/products/new",
+        "type": "form",
+        "entity": "Product",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Edit Product",
+        "route": "/products/:id/edit",
+        "type": "form",
+        "entity": "Product",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Suppliers",
+        "route": "/suppliers",
+        "type": "list",
+        "entity": "Supplier",
+        "access": [
+          "admin"
+        ],
+        "fields": [
+          "name",
+          "contactInfo"
+        ]
+      },
+      {
+        "name": "New Supplier",
+        "route": "/suppliers/new",
+        "type": "form",
+        "entity": "Supplier",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Edit Supplier",
+        "route": "/suppliers/:id/edit",
+        "type": "form",
+        "entity": "Supplier",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Stock Movements",
+        "route": "/stock-movements",
+        "type": "list",
+        "entity": "StockMovement",
+        "access": [
+          "admin",
+          "staff"
+        ],
+        "fields": [
+          "product.name",
+          "quantityChange",
+          "movementType",
+          "timestamp"
+        ]
+      },
+      {
+        "name": "Log Stock Movement",
+        "route": "/stock-movements/new",
+        "type": "form",
+        "entity": "StockMovement",
+        "access": [
+          "staff"
+        ]
+      },
+      {
+        "name": "Low Stock Report",
+        "route": "/reports/low-stock",
+        "type": "list",
+        "entity": "Product",
+        "access": [
+          "admin"
+        ],
+        "fields": [
+          "name",
+          "sku",
+          "quantity",
+          "reorderPoint"
+        ],
+        "filters": [
+          {
+            "field": "quantity",
+            "operator": "<=",
+            "valueField": "reorderPoint"
+          }
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "ownership",
+        "id": "productOwnership",
+        "entity": "Product"
+      },
+      {
+        "type": "ownership",
+        "id": "supplierOwnership",
+        "entity": "Supplier"
+      },
+      {
+        "type": "ownership",
+        "id": "stockMovementOwnership",
+        "entity": "StockMovement"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Warehouse Inventory Manager\",\n    \"description\": \"An inventory management system for a warehouse to track products, suppliers, and stock levels, with features for staff to record stock movements and admins to manage suppliers and view low-stock reports.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Product\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"sku\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"quantity\",\n          \"type\": \"integer\",\n          \"required\": true,\n          \"default\": 0\n        },\n        {\n          \"name\": \"reorderPoint\",\n          \"type\": \"integer\",\n          \"required\": true,\n          \"default\": 0\n        }\n      ]\n    },\n    {\n      \"name\": \"Supplier\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"contactInfo\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"address\",\n          \"type\": \"text\"\n        }\n      ]\n    },\n    {\n      \"name\": \"StockMovement\",\n      \"fields\": [\n        {\n          \"name\": \"quantityChange\",\n          \"type\": \"integer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"movementType\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"received\",\n            \"shipped\",\n            \"adjusted\"\n          ]\n        },\n        {\n          \"name\": \"timestamp\",\n          \"type\": \"datetime\",\n          \"required\": true,\n          \"default\": \"now()\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"product\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Product\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"admin\",\n      \"description\": \"Manages suppliers and views reports.\"\n    },\n    {\n      \"name\": \"staff\",\n      \"description\": \"Records stock movements.\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"staff\",\n      \"entity\": \"Product\",\n      \"actions\": [\n        \"read\"\n      ]\n    },\n    {\n      \"role\": \"staff\",\n      \"entity\": \"StockMovement\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ]\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Product\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ]\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Supplier\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ]\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"StockMovement\",\n      \"actions\": [\n        \"read\"\n      ]\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Products\",\n      \"route\": \"/products\",\n      \"type\": \"list\",\n      \"entity\": \"Product\",\n      \"access\": [\n        \"admin\",\n        \"staff\"\n      ],\n      \"fields\": [\n        \"name\",\n        \"sku\",\n        \"quantity\",\n        \"reorderPoint\"\n      ]\n    },\n    {\n      \"name\": \"Product Detail\",\n      \"route\": \"/products/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Product\",\n      \"access\": [\n        \"admin\",\n        \"staff\"\n      ]\n    },\n    {\n      \"name\": \"New Product\",\n      \"route\": \"/products/new\",\n      \"type\": \"form\",\n      \"entity\": \"Product\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Edit Product\",\n      \"route\": \"/products/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Product\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Suppliers\",\n      \"route\": \"/suppliers\",\n      \"type\": \"list\",\n      \"entity\": \"Supplier\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"fields\": [\n        \"name\",\n        \"contactInfo\"\n      ]\n    },\n    {\n      \"name\": \"New Supplier\",\n      \"route\": \"/suppliers/new\",\n      \"type\": \"form\",\n      \"entity\": \"Supplier\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Edit Supplier\",\n      \"route\": \"/suppliers/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Supplier\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Stock Movements\",\n      \"route\": \"/stock-movements\",\n      \"type\": \"list\",\n      \"entity\": \"StockMovement\",\n      \"access\": [\n        \"admin\",\n        \"staff\"\n      ],\n      \"fields\": [\n        \"product.name\",\n        \"quantityChange\",\n        \"movementType\",\n        \"timestamp\"\n      ]\n    },\n    {\n      \"name\": \"Log Stock Movement\",\n      \"route\": \"/stock-movements/new\",\n      \"type\": \"form\",\n      \"entity\": \"StockMovement\",\n      \"access\": [\n        \"staff\"\n      ]\n    },\n    {\n      \"name\": \"Low Stock Report\",\n      \"route\": \"/reports/low-stock\",\n      \"type\": \"list\",\n      \"entity\": \"Product\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"fields\": [\n        \"name\",\n        \"sku\",\n        \"quantity\",\n        \"reorderPoint\"\n      ],\n      \"filters\": [\n        {\n          \"field\": \"quantity\",\n          \"operator\": \"<=\",\n          \"valueField\": \"reorderPoint\"\n        }\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"ownership\",\n      \"id\": \"productOwnership\",\n      \"entity\": \"Product\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"supplierOwnership\",\n      \"entity\": \"Supplier\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"stockMovementOwnership\",\n      \"entity\": \"StockMovement\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1965,
+    "outputTokens": 1706
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 4591
+}

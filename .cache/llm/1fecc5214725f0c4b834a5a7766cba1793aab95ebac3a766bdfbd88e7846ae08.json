@@ -1,0 +1,391 @@
+{
+  "data": {
+    "meta": {
+      "name": "Project Manager",
+      "description": "A project management tool with projects, tasks, comments, team members, and a premium tier that unlocks time tracking. Managers see analytics."
+    },
+    "entities": [
+      {
+        "name": "Project",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "dueDate",
+            "type": "date"
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "enumValues": [
+              "notStarted",
+              "inProgress",
+              "completed",
+              "onHold"
+            ],
+            "default": "notStarted"
+          }
+        ]
+      },
+      {
+        "name": "Task",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "dueDate",
+            "type": "date"
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "enumValues": [
+              "notStarted",
+              "inProgress",
+              "completed",
+              "onHold"
+            ],
+            "default": "notStarted"
+          }
+        ],
+        "relations": [
+          {
+            "name": "project",
+            "kind": "manyToOne",
+            "target": "Project",
+            "required": true
+          },
+          {
+            "name": "assignee",
+            "kind": "manyToOne",
+            "target": "User",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Comment",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "text",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "timestamp",
+            "type": "datetime",
+            "required": true
+          }
+        ],
+        "relations": [
+          {
+            "name": "task",
+            "kind": "manyToOne",
+            "target": "Task",
+            "required": true
+          },
+          {
+            "name": "user",
+            "kind": "manyToOne",
+            "target": "User",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "TimeEntry",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "startTime",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "name": "endTime",
+            "type": "datetime"
+          },
+          {
+            "name": "duration",
+            "type": "integer"
+          }
+        ],
+        "relations": [
+          {
+            "name": "task",
+            "kind": "manyToOne",
+            "target": "Task",
+            "required": true
+          },
+          {
+            "name": "user",
+            "kind": "manyToOne",
+            "target": "User",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "member",
+        "isDefault": true
+      },
+      {
+        "name": "premiumMember"
+      },
+      {
+        "name": "manager"
+      }
+    ],
+    "permissions": [
+      {
+        "role": "member",
+        "entity": "Project",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "member",
+        "entity": "Task",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "member",
+        "entity": "Comment",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumMember",
+        "entity": "TimeEntry",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "manager",
+        "entity": "Project",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "manager",
+        "entity": "Task",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "manager",
+        "entity": "Comment",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "manager",
+        "entity": "TimeEntry",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Projects",
+        "route": "/projects",
+        "type": "list",
+        "entity": "Project",
+        "access": [
+          "member",
+          "premiumMember",
+          "manager"
+        ]
+      },
+      {
+        "name": "New Project",
+        "route": "/projects/new",
+        "type": "form",
+        "entity": "Project",
+        "access": [
+          "member",
+          "premiumMember",
+          "manager"
+        ]
+      },
+      {
+        "name": "Project Detail",
+        "route": "/projects/:id",
+        "type": "detail",
+        "entity": "Project",
+        "access": [
+          "member",
+          "premiumMember",
+          "manager"
+        ]
+      },
+      {
+        "name": "Tasks",
+        "route": "/tasks",
+        "type": "list",
+        "entity": "Task",
+        "access": [
+          "member",
+          "premiumMember",
+          "manager"
+        ]
+      },
+      {
+        "name": "New Task",
+        "route": "/tasks/new",
+        "type": "form",
+        "entity": "Task",
+        "access": [
+          "member",
+          "premiumMember",
+          "manager"
+        ]
+      },
+      {
+        "name": "Analytics",
+        "route": "/analytics",
+        "type": "dashboard",
+        "access": [
+          "manager"
+        ],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Projects",
+            "entity": "Project",
+            "metric": "count"
+          },
+          {
+            "type": "stat",
+            "label": "Total Tasks",
+            "entity": "Task",
+            "metric": "count"
+          },
+          {
+            "type": "chart",
+            "label": "Tasks by Status",
+            "entity": "Task",
+            "field": "status"
+          }
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "timeTracking"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "timeTrackingGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "entities": [
+            "TimeEntry"
+          ],
+          "features": [
+            "timeTracking"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "projectOwnership",
+        "entity": "Project"
+      },
+      {
+        "type": "ownership",
+        "id": "taskOwnership",
+        "entity": "Task"
+      },
+      {
+        "type": "ownership",
+        "id": "commentOwnership",
+        "entity": "Comment"
+      },
+      {
+        "type": "ownership",
+        "id": "timeEntryOwnership",
+        "entity": "TimeEntry"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Project Manager\",\n    \"description\": \"A project management tool with projects, tasks, comments, team members, and a premium tier that unlocks time tracking. Managers see analytics.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Project\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"dueDate\",\n          \"type\": \"date\"\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"enumValues\": [\n            \"notStarted\",\n            \"inProgress\",\n            \"completed\",\n            \"onHold\"\n          ],\n          \"default\": \"notStarted\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Task\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"dueDate\",\n          \"type\": \"date\"\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"enumValues\": [\n            \"notStarted\",\n            \"inProgress\",\n            \"completed\",\n            \"onHold\"\n          ],\n          \"default\": \"notStarted\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"project\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Project\",\n          \"required\": true\n        },\n        {\n          \"name\": \"assignee\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"User\",\n          \"required\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"Comment\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"text\",\n          \"type\": \"text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"timestamp\",\n          \"type\": \"datetime\",\n          \"required\": true\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"task\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Task\",\n          \"required\": true\n        },\n        {\n          \"name\": \"user\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"User\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"TimeEntry\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"startTime\",\n          \"type\": \"datetime\",\n          \"required\": true\n        },\n        {\n          \"name\": \"endTime\",\n          \"type\": \"datetime\"\n        },\n        {\n          \"name\": \"duration\",\n          \"type\": \"integer\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"task\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Task\",\n          \"required\": true\n        },\n        {\n          \"name\": \"user\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"User\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"member\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premiumMember\"\n    },\n    {\n      \"name\": \"manager\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"member\",\n      \"entity\": \"Project\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"member\",\n      \"entity\": \"Task\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"member\",\n      \"entity\": \"Comment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumMember\",\n      \"entity\": \"TimeEntry\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"manager\",\n      \"entity\": \"Project\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"manager\",\n      \"entity\": \"Task\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"manager\",\n      \"entity\": \"Comment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"manager\",\n      \"entity\": \"TimeEntry\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Projects\",\n      \"route\": \"/projects\",\n      \"type\": \"list\",\n      \"entity\": \"Project\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\",\n        \"manager\"\n      ]\n    },\n    {\n      \"name\": \"New Project\",\n      \"route\": \"/projects/new\",\n      \"type\": \"form\",\n      \"entity\": \"Project\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\",\n        \"manager\"\n      ]\n    },\n    {\n      \"name\": \"Project Detail\",\n      \"route\": \"/projects/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Project\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\",\n        \"manager\"\n      ]\n    },\n    {\n      \"name\": \"Tasks\",\n      \"route\": \"/tasks\",\n      \"type\": \"list\",\n      \"entity\": \"Task\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\",\n        \"manager\"\n      ]\n    },\n    {\n      \"name\": \"New Task\",\n      \"route\": \"/tasks/new\",\n      \"type\": \"form\",\n      \"entity\": \"Task\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\",\n        \"manager\"\n      ]\n    },\n    {\n      \"name\": \"Analytics\",\n      \"route\": \"/analytics\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"manager\"\n      ],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Projects\",\n          \"entity\": \"Project\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Tasks\",\n          \"entity\": \"Task\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"chart\",\n          \"label\": \"Tasks by Status\",\n          \"entity\": \"Task\",\n          \"field\": \"status\"\n        }\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"timeTracking\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"timeTrackingGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"entities\": [\n          \"TimeEntry\"\n        ],\n        \"features\": [\n          \"timeTracking\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"projectOwnership\",\n      \"entity\": \"Project\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"taskOwnership\",\n      \"entity\": \"Task\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"commentOwnership\",\n      \"entity\": \"Comment\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"timeEntryOwnership\",\n      \"entity\": \"TimeEntry\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1994,
+    "outputTokens": 2180
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 4461
+}

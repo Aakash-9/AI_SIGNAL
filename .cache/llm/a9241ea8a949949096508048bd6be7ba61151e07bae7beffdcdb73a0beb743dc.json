@@ -1,0 +1,451 @@
+{
+  "data": {
+    "meta": {
+      "name": "E-commerce Store",
+      "description": "An online store enabling customers to browse products, place and track orders, while admins manage the product catalog and view sales, and premium sellers receive featured listings."
+    },
+    "entities": [
+      {
+        "name": "Product",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "stockQuantity",
+            "type": "integer",
+            "required": true,
+            "default": 0
+          },
+          {
+            "name": "imageUrl",
+            "type": "url"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "isFeatured",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "seller",
+            "kind": "manyToOne",
+            "target": "Seller",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Order",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "orderNumber",
+            "type": "string",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "orderDate",
+            "type": "datetime",
+            "required": true,
+            "default": "now()"
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "pending",
+              "processing",
+              "shipped",
+              "delivered",
+              "cancelled"
+            ],
+            "default": "pending"
+          },
+          {
+            "name": "totalAmount",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "shippingAddress",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "paymentStatus",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "unpaid",
+              "paid",
+              "refunded"
+            ],
+            "default": "unpaid"
+          }
+        ],
+        "relations": [
+          {
+            "name": "customer",
+            "kind": "manyToOne",
+            "target": "User",
+            "required": true
+          },
+          {
+            "name": "items",
+            "kind": "oneToMany",
+            "target": "OrderItem",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Seller",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contactEmail",
+            "type": "email",
+            "required": true
+          },
+          {
+            "name": "isPremium",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "products",
+            "kind": "oneToMany",
+            "target": "Product"
+          },
+          {
+            "name": "orders",
+            "kind": "oneToMany",
+            "target": "Order"
+          }
+        ]
+      },
+      {
+        "name": "OrderItem",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "quantity",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "priceAtPurchase",
+            "type": "number",
+            "required": true
+          }
+        ],
+        "relations": [
+          {
+            "name": "order",
+            "kind": "manyToOne",
+            "target": "Order",
+            "required": true
+          },
+          {
+            "name": "product",
+            "kind": "manyToOne",
+            "target": "Product",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "customer",
+        "description": "Browses products, places and tracks orders.",
+        "isDefault": true
+      },
+      {
+        "name": "admin",
+        "description": "Manages product catalog and sees sales."
+      },
+      {
+        "name": "seller",
+        "description": "Manages their own products."
+      }
+    ],
+    "permissions": [
+      {
+        "role": "customer",
+        "entity": "Product",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "customer",
+        "entity": "Order",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "customer",
+        "entity": "OrderItem",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Product",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Order",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Seller",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "seller",
+        "entity": "Product",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "seller",
+        "entity": "Order",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Products",
+        "route": "/products",
+        "type": "list",
+        "entity": "Product",
+        "access": [
+          "customer",
+          "admin",
+          "seller"
+        ]
+      },
+      {
+        "name": "Product Detail",
+        "route": "/products/:id",
+        "type": "detail",
+        "entity": "Product",
+        "access": [
+          "customer",
+          "admin",
+          "seller"
+        ]
+      },
+      {
+        "name": "New Product",
+        "route": "/products/new",
+        "type": "form",
+        "entity": "Product",
+        "access": [
+          "admin",
+          "seller"
+        ]
+      },
+      {
+        "name": "Edit Product",
+        "route": "/products/:id/edit",
+        "type": "form",
+        "entity": "Product",
+        "access": [
+          "admin",
+          "seller"
+        ]
+      },
+      {
+        "name": "My Orders",
+        "route": "/my-orders",
+        "type": "list",
+        "entity": "Order",
+        "access": [
+          "customer"
+        ]
+      },
+      {
+        "name": "Order Detail",
+        "route": "/my-orders/:id",
+        "type": "detail",
+        "entity": "Order",
+        "access": [
+          "customer",
+          "admin"
+        ]
+      },
+      {
+        "name": "Place Order",
+        "route": "/checkout",
+        "type": "form",
+        "entity": "Order",
+        "access": [
+          "customer"
+        ],
+        "requiresPlan": "premium"
+      },
+      {
+        "name": "Sales Dashboard",
+        "route": "/sales",
+        "type": "dashboard",
+        "access": [
+          "admin"
+        ],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Sales",
+            "entity": "Order",
+            "metric": "sum",
+            "field": "totalAmount"
+          },
+          {
+            "type": "chart",
+            "label": "Sales Over Time",
+            "entity": "Order",
+            "metric": "sum",
+            "field": "totalAmount"
+          }
+        ]
+      },
+      {
+        "name": "Sellers",
+        "route": "/sellers",
+        "type": "list",
+        "entity": "Seller",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Featured Products",
+        "route": "/featured",
+        "type": "list",
+        "entity": "Product",
+        "access": [
+          "customer"
+        ],
+        "filters": {
+          "isFeatured": true
+        },
+        "requiresPlan": "premium"
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "featuredListings",
+          "prioritySupport"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumSellerFeatures",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Featured Products"
+          ],
+          "features": [
+            "featuredListings"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "orderOwnership",
+        "entity": "Order"
+      },
+      {
+        "type": "ownership",
+        "id": "productOwnership",
+        "entity": "Product"
+      },
+      {
+        "type": "ownership",
+        "id": "orderItemOwnership",
+        "entity": "OrderItem"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"E-commerce Store\",\n    \"description\": \"An online store enabling customers to browse products, place and track orders, while admins manage the product catalog and view sales, and premium sellers receive featured listings.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Product\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"price\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"stockQuantity\",\n          \"type\": \"integer\",\n          \"required\": true,\n          \"default\": 0\n        },\n        {\n          \"name\": \"imageUrl\",\n          \"type\": \"url\"\n        },\n        {\n          \"name\": \"category\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"isFeatured\",\n          \"type\": \"boolean\",\n          \"default\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"seller\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Seller\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Order\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"orderNumber\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"orderDate\",\n          \"type\": \"datetime\",\n          \"required\": true,\n          \"default\": \"now()\"\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"pending\",\n            \"processing\",\n            \"shipped\",\n            \"delivered\",\n            \"cancelled\"\n          ],\n          \"default\": \"pending\"\n        },\n        {\n          \"name\": \"totalAmount\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"shippingAddress\",\n          \"type\": \"text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"paymentStatus\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"unpaid\",\n            \"paid\",\n            \"refunded\"\n          ],\n          \"default\": \"unpaid\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"customer\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"User\",\n          \"required\": true\n        },\n        {\n          \"name\": \"items\",\n          \"kind\": \"oneToMany\",\n          \"target\": \"OrderItem\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Seller\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"contactEmail\",\n          \"type\": \"email\",\n          \"required\": true\n        },\n        {\n          \"name\": \"isPremium\",\n          \"type\": \"boolean\",\n          \"default\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"products\",\n          \"kind\": \"oneToMany\",\n          \"target\": \"Product\"\n        },\n        {\n          \"name\": \"orders\",\n          \"kind\": \"oneToMany\",\n          \"target\": \"Order\"\n        }\n      ]\n    },\n    {\n      \"name\": \"OrderItem\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"quantity\",\n          \"type\": \"integer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"priceAtPurchase\",\n          \"type\": \"number\",\n          \"required\": true\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"order\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Order\",\n          \"required\": true\n        },\n        {\n          \"name\": \"product\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Product\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"customer\",\n      \"description\": \"Browses products, places and tracks orders.\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"admin\",\n      \"description\": \"Manages product catalog and sees sales.\"\n    },\n    {\n      \"name\": \"seller\",\n      \"description\": \"Manages their own products.\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"customer\",\n      \"entity\": \"Product\",\n      \"actions\": [\"read\"],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"customer\",\n      \"entity\": \"Order\",\n      \"actions\": [\"create\", \"read\", \"update\"],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"customer\",\n      \"entity\": \"OrderItem\",\n      \"actions\": [\"read\"],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Product\",\n      \"actions\": [\"create\", \"read\", \"update\", \"delete\"],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Order\",\n      \"actions\": [\"read\", \"update\"],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Seller\",\n      \"actions\": [\"read\", \"update\"],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"seller\",\n      \"entity\": \"Product\",\n      \"actions\": [\"create\", \"read\", \"update\"],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"seller\",\n      \"entity\": \"Order\",\n      \"actions\": [\"read\"],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Products\",\n      \"route\": \"/products\",\n      \"type\": \"list\",\n      \"entity\": \"Product\",\n      \"access\": [\"customer\", \"admin\", \"seller\"]\n    },\n    {\n      \"name\": \"Product Detail\",\n      \"route\": \"/products/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Product\",\n      \"access\": [\"customer\", \"admin\", \"seller\"]\n    },\n    {\n      \"name\": \"New Product\",\n      \"route\": \"/products/new\",\n      \"type\": \"form\",\n      \"entity\": \"Product\",\n      \"access\": [\"admin\", \"seller\"]\n    },\n    {\n      \"name\": \"Edit Product\",\n      \"route\": \"/products/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Product\",\n      \"access\": [\"admin\", \"seller\"]\n    },\n    {\n      \"name\": \"My Orders\",\n      \"route\": \"/my-orders\",\n      \"type\": \"list\",\n      \"entity\": \"Order\",\n      \"access\": [\"customer\"]\n    },\n    {\n      \"name\": \"Order Detail\",\n      \"route\": \"/my-orders/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Order\",\n      \"access\": [\"customer\", \"admin\"]\n    },\n    {\n      \"name\": \"Place Order\",\n      \"route\": \"/checkout\",\n      \"type\": \"form\",\n      \"entity\": \"Order\",\n      \"access\": [\"customer\"],\n      \"requiresPlan\": \"premium\"\n    },\n    {\n      \"name\": \"Sales Dashboard\",\n      \"route\": \"/sales\",\n      \"type\": \"dashboard\",\n      \"access\": [\"admin\"],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Sales\",\n          \"entity\": \"Order\",\n          \"metric\": \"sum\",\n          \"field\": \"totalAmount\"\n        },\n        {\n          \"type\": \"chart\",\n          \"label\": \"Sales Over Time\",\n          \"entity\": \"Order\",\n          \"metric\": \"sum\",\n          \"field\": \"totalAmount\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Sellers\",\n      \"route\": \"/sellers\",\n      \"type\": \"list\",\n      \"entity\": \"Seller\",\n      \"access\": [\"admin\"]\n    },\n    {\n      \"name\": \"Featured Products\",\n      \"route\": \"/featured\",\n      \"type\": \"list\",\n      \"entity\": \"Product\",\n      \"access\": [\"customer\"],\n      \"filters\": {\n        \"isFeatured\": true\n      },\n      \"requiresPlan\": \"premium\"\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"featuredListings\",\n        \"prioritySupport\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumSellerFeatures\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Featured Products\"\n        ],\n        \"features\": [\n          \"featuredListings\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"orderOwnership\",\n      \"entity\": \"Order\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"productOwnership\",\n      \"entity\": \"Product\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"orderItemOwnership\",\n      \"entity\": \"OrderItem\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 2000,
+    "outputTokens": 2449
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 7631
+}

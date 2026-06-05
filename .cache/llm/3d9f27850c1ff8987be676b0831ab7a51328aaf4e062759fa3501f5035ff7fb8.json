@@ -1,0 +1,62 @@
+{
+  "data": {
+    "appName": "RecipeShare",
+    "appType": "recipe sharing",
+    "summary": "A recipe sharing app where users can post recipes, comment on them, and premium users get access to weekly meal planning.",
+    "entities": [
+      {
+        "name": "recipe",
+        "fields": [
+          "title",
+          "description",
+          "ingredients",
+          "steps",
+          "authorId"
+        ]
+      },
+      {
+        "name": "comment",
+        "fields": [
+          "recipeId",
+          "userId",
+          "text",
+          "timestamp"
+        ]
+      },
+      {
+        "name": "mealPlan",
+        "fields": [
+          "userId",
+          "weekStartDate",
+          "recipes"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "premium user"
+    ],
+    "features": [
+      "auth",
+      "recipe posting",
+      "commenting",
+      "meal planning"
+    ],
+    "hasAuth": true,
+    "hasPayments": false,
+    "ambiguities": [],
+    "assumptions": [
+      "Users will have accounts to post recipes and comments.",
+      "Premium user status will be managed, though the payment mechanism is not specified.",
+      "Recipes will have a title, description, ingredients list, and steps."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"RecipeShare\",\n  \"appType\": \"recipe sharing\",\n  \"summary\": \"A recipe sharing app where users can post recipes, comment on them, and premium users get access to weekly meal planning.\",\n  \"entities\": [\n    {\n      \"name\": \"recipe\",\n      \"fields\": [\"title\", \"description\", \"ingredients\", \"steps\", \"authorId\"]\n    },\n    {\n      \"name\": \"comment\",\n      \"fields\": [\"recipeId\", \"userId\", \"text\", \"timestamp\"]\n    },\n    {\n      \"name\": \"mealPlan\",\n      \"fields\": [\"userId\", \"weekStartDate\", \"recipes\"]\n    }\n  ],\n  \"roles\": [\"user\", \"premium user\"],\n  \"features\": [\"auth\", \"recipe posting\", \"commenting\", \"meal planning\"],\n  \"hasAuth\": true,\n  \"hasPayments\": false,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Users will have accounts to post recipes and comments.\",\n    \"Premium user status will be managed, though the payment mechanism is not specified.\",\n    \"Recipes will have a title, description, ingredients list, and steps.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 437,
+    "outputTokens": 280
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1734
+}

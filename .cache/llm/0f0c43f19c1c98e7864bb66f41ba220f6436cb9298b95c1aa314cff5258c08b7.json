@@ -1,0 +1,41 @@
+{
+  "data": {
+    "appName": "Private Data App",
+    "appType": "personal data viewer",
+    "summary": "A private application where users can view their own personalized data without needing to create an account.",
+    "entities": [
+      {
+        "name": "userData",
+        "fields": [
+          "userId",
+          "dataContent"
+        ]
+      }
+    ],
+    "roles": [],
+    "features": [
+      "personalizedData"
+    ],
+    "hasAuth": false,
+    "hasPayments": false,
+    "ambiguities": [
+      "The request states 'each person sees their own personalized private data' but also 'anyone can use without creating an account'. It is unclear how user data will be associated with individuals without accounts or authentication."
+    ],
+    "assumptions": [
+      "User data will be associated with a device or browser session.",
+      "The 'private data' is generated or provided by the app itself, not user-uploaded content."
+    ],
+    "clarifyingQuestions": [
+      "How will the application uniquely identify each user to provide them with their own personalized data without an account?",
+      "What kind of 'personalized private data' will be displayed or managed by the app?",
+      "Is there any data that needs to be persisted across sessions or devices for a given user?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"Private Data App\",\n  \"appType\": \"personal data viewer\",\n  \"summary\": \"A private application where users can view their own personalized data without needing to create an account.\",\n  \"entities\": [\n    {\n      \"name\": \"userData\",\n      \"fields\": [\n        \"userId\",\n        \"dataContent\"\n      ]\n    }\n  ],\n  \"roles\": [],\n  \"features\": [\n    \"personalizedData\"\n  ],\n  \"hasAuth\": false,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The request states 'each person sees their own personalized private data' but also 'anyone can use without creating an account'. It is unclear how user data will be associated with individuals without accounts or authentication.\"\n  ],\n  \"assumptions\": [\n    \"User data will be associated with a device or browser session.\",\n    \"The 'private data' is generated or provided by the app itself, not user-uploaded content.\"\n  ],\n  \"clarifyingQuestions\": [\n    \"How will the application uniquely identify each user to provide them with their own personalized data without an account?\",\n    \"What kind of 'personalized private data' will be displayed or managed by the app?\",\n    \"Is there any data that needs to be persisted across sessions or devices for a given user?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 432,
+    "outputTokens": 305
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2260
+}

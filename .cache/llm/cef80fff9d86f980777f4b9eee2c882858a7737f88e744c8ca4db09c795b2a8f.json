@@ -1,0 +1,48 @@
+{
+  "data": {
+    "appName": "User App",
+    "appType": "general purpose",
+    "summary": "A basic application to manage users and related data.",
+    "entities": [
+      {
+        "name": "user",
+        "fields": [
+          "firstName",
+          "lastName",
+          "email",
+          "role"
+        ]
+      }
+    ],
+    "roles": [
+      "admin",
+      "member"
+    ],
+    "features": [
+      "auth",
+      "userManagement"
+    ],
+    "hasAuth": true,
+    "hasPayments": false,
+    "ambiguities": [
+      "The request is very vague about what 'stuff' refers to."
+    ],
+    "assumptions": [
+      "The primary entity to manage is 'user'.",
+      "Users will have basic profile information.",
+      "There will be at least two roles: admin and member."
+    ],
+    "clarifyingQuestions": [
+      "What specific 'stuff' or data should this application manage besides users?",
+      "What are the key actions users should be able to perform within the application?",
+      "Are there any specific business processes or workflows this application needs to support?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"User App\",\n  \"appType\": \"general purpose\",\n  \"summary\": \"A basic application to manage users and related data.\",\n  \"entities\": [\n    {\n      \"name\": \"user\",\n      \"fields\": [\n        \"firstName\",\n        \"lastName\",\n        \"email\",\n        \"role\"\n      ]\n    }\n  ],\n  \"roles\": [\n    \"admin\",\n    \"member\"\n  ],\n  \"features\": [\n    \"auth\",\n    \"userManagement\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The request is very vague about what 'stuff' refers to.\"\n  ],\n  \"assumptions\": [\n    \"The primary entity to manage is 'user'.\",\n    \"Users will have basic profile information.\",\n    \"There will be at least two roles: admin and member.\"\n  ],\n  \"clarifyingQuestions\": [\n    \"What specific 'stuff' or data should this application manage besides users?\",\n    \"What are the key actions users should be able to perform within the application?\",\n    \"Are there any specific business processes or workflows this application needs to support?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 417,
+    "outputTokens": 283
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1747
+}

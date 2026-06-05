@@ -1,0 +1,76 @@
+{
+  "data": {
+    "appName": "Real Estate Listings",
+    "appType": "real estate listings",
+    "summary": "A real estate listings platform for agents to post properties, buyers to inquire, with admin moderation and featured listings for premium agents.",
+    "entities": [
+      {
+        "name": "property",
+        "fields": [
+          "address",
+          "price",
+          "description",
+          "bedrooms",
+          "bathrooms",
+          "squareFootage",
+          "images",
+          "status"
+        ]
+      },
+      {
+        "name": "inquiry",
+        "fields": [
+          "buyerName",
+          "buyerEmail",
+          "buyerPhone",
+          "message",
+          "propertyId",
+          "agentId",
+          "inquiryDate"
+        ]
+      },
+      {
+        "name": "agent",
+        "fields": [
+          "name",
+          "email",
+          "phone",
+          "company",
+          "isPremium"
+        ]
+      }
+    ],
+    "roles": [
+      "agent",
+      "buyer",
+      "admin",
+      "premiumAgent"
+    ],
+    "features": [
+      "auth",
+      "listingManagement",
+      "inquiryManagement",
+      "adminModeration",
+      "featuredListings",
+      "roleBasedAccess"
+    ],
+    "hasAuth": true,
+    "hasPayments": false,
+    "ambiguities": [
+      "The criteria for 'premium agent' and how featured listings are determined are not specified."
+    ],
+    "assumptions": [
+      "Agents will have user accounts to manage their listings.",
+      "Buyers will be able to browse listings without accounts, but may need accounts to submit inquiries.",
+      "Admin moderation involves approving or rejecting listings."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Real Estate Listings\",\n  \"appType\": \"real estate listings\",\n  \"summary\": \"A real estate listings platform for agents to post properties, buyers to inquire, with admin moderation and featured listings for premium agents.\",\n  \"entities\": [\n    {\n      \"name\": \"property\",\n      \"fields\": [\n        \"address\",\n        \"price\",\n        \"description\",\n        \"bedrooms\",\n        \"bathrooms\",\n        \"squareFootage\",\n        \"images\",\n        \"status\"\n      ]\n    },\n    {\n      \"name\": \"inquiry\",\n      \"fields\": [\n        \"buyerName\",\n        \"buyerEmail\",\n        \"buyerPhone\",\n        \"message\",\n        \"propertyId\",\n        \"agentId\",\n        \"inquiryDate\"\n      ]\n    },\n    {\n      \"name\": \"agent\",\n      \"fields\": [\n        \"name\",\n        \"email\",\n        \"phone\",\n        \"company\",\n        \"isPremium\"\n      ]\n    }\n  ],\n  \"roles\": [\n    \"agent\",\n    \"buyer\",\n    \"admin\",\n    \"premiumAgent\"\n  ],\n  \"features\": [\n    \"auth\",\n    \"listingManagement\",\n    \"inquiryManagement\",\n    \"adminModeration\",\n    \"featuredListings\",\n    \"roleBasedAccess\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The criteria for 'premium agent' and how featured listings are determined are not specified.\"\n  ],\n  \"assumptions\": [\n    \"Agents will have user accounts to manage their listings.\",\n    \"Buyers will be able to browse listings without accounts, but may need accounts to submit inquiries.\",\n    \"Admin moderation involves approving or rejecting listings.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 440,
+    "outputTokens": 433
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2334
+}

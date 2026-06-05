@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Generated App</title>
+<style>
+  :root{--bg:#f6f7fb;--ink:#0f1222;--muted:#6b7280;--line:#e9ebf1;--brand1:#6d5efc;--brand2:#9b6cff;--green:#16a34a;--amber:#b45309;--amberbg:#fef3c7;--red:#dc2626}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(20,20,60,.08);padding:24px}
+  .login{width:360px}
+  .login h1{margin:0 0 4px;font-size:20px}.login p{margin:0 0 16px;color:var(--muted);font-size:14px}
+  input,select{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:14px;font-family:inherit;margin-bottom:10px}
+  .btn{background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff;border:0;border-radius:9px;padding:10px 16px;font-weight:700;cursor:pointer;font-size:14px}
+  .btn.sm{padding:6px 12px;font-size:13px}
+  .btn.ghost{background:#fff;color:var(--muted);border:1px solid var(--line)}
+  .seed{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+  .seed button{text-align:left;background:#fafbfd;border:1px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer;font-size:13px}
+  .seed button:hover{border-color:var(--brand1)}
+  .seed b{color:var(--ink)}.seed span{color:var(--muted)}
+  .shell{display:flex;min-height:100vh}
+  .side{width:230px;background:#fff;border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column}
+  .appname{font-weight:850;font-size:17px;padding:6px 10px 14px}
+  .nav-item{padding:9px 12px;border-radius:9px;font-size:14px;color:#444b59;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+  .nav-item:hover{background:#eef1f7}.nav-item.active{background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff}
+  .badge{font-size:10px;padding:2px 7px;border-radius:6px;background:var(--amberbg);color:var(--amber)}
+  .who{margin-top:auto;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+  .who b{color:var(--ink)}
+  .main{flex:1;padding:28px 32px;overflow:auto}
+  .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .head h2{margin:0;font-size:22px}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:10px 14px;border-bottom:2px solid var(--line)}
+  td{padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px}
+  tr:last-child td{border-bottom:0}
+  .empty{color:var(--muted);padding:30px;text-align:center;background:#fff;border:1px dashed var(--line);border-radius:12px}
+  .form{max-width:460px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:6px}
+  label{font-size:13px;font-weight:600;color:#444b59;margin-bottom:2px}
+  .widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+  .widget{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat{font-size:34px;font-weight:850;color:var(--brand1)}.wlabel{color:var(--muted);font-size:13px;margin-top:4px}
+  .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center}
+  .plan.cur{border-color:var(--green)}.plan.feat{border-color:var(--brand1)}
+  .price{font-size:30px;font-weight:850;margin:8px 0}.price span{font-size:13px;color:var(--muted)}
+  .feats{list-style:none;padding:0;margin:8px 0 14px;text-align:left;font-size:13px;color:#444b59}.feats li{padding:3px 0}
+  .locked{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:30px;text-align:center;color:var(--muted)}
+  .err{color:var(--red);font-size:13px;margin-top:8px}
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;transition:.2s}
+  .toast.show{opacity:1}
+  .runtimebar{background:#eef1ff;color:#3b3a99;font-size:12px;padding:6px 14px;text-align:center;border-bottom:1px solid #dfe3ff}
+</style>
+</head>
+<body>
+<div class="runtimebar">⚡ This is a <b>live generated app</b> — running on the schema-driven runtime (real DB, enforced permissions).</div>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+<script>
+const BASE = location.pathname.replace(/\/$/, "");
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;" }[c]));
+const snake = (s) => s.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase();
+let CFG, TOKEN = "", USER = null, CURRENT = 0;
+
+function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
+
+async function api(method, path, body){
+  const r = await fetch(BASE + path, {
+    method, headers: { "content-type":"application/json", ...(TOKEN?{authorization:"Bearer "+TOKEN}:{}) },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await r.json().catch(()=>({}));
+  return { ok: r.ok, status: r.status, data };
+}
+
+function applyTheme(th){
+  if (!th) return;
+  if (th.color){
+    document.documentElement.style.setProperty("--brand1", th.color);
+    document.documentElement.style.setProperty("--brand2", th.color);
+    // Make the theme obvious: tint app name, headings, runtime bar + active nav.
+    const s = document.createElement("style");
+    s.textContent =
+      ".appname,.head h2,.stat{color:"+th.color+"}"+
+      ".runtimebar{background:"+th.color+";color:#fff;border-color:"+th.color+"}"+
+      ".nav-item.active{background:"+th.color+"}";
+    document.head.appendChild(s);
+  }
+  if (th.fontScale){ document.body.style.zoom = String(th.fontScale); }
+}
+
+async function boot(){
+  const r = await fetch(BASE + "/config"); CFG = await r.json();
+  document.title = CFG.appName;
+  applyTheme(CFG.ui && CFG.ui.theme);
+  if (CFG.requireAuth && !USER) loginScreen(); else appShell();
+}
+
+function loginScreen(){
+  const seeds = (CFG.seededUsers||[]).map((u,i)=>
+    '<button data-i="'+i+'"><b>Log in as '+esc(u.label)+'</b> &nbsp;<span>'+esc(u.email)+'</span></button>').join("");
+  $("#root").innerHTML =
+    '<div class="center"><div class="card login"><h1>'+esc(CFG.appName)+'</h1>'+
+    '<p>Generated app · sign in to continue</p>'+
+    (seeds?'<div class="seed">'+seeds+'</div><div style="text-align:center;color:var(--muted);font-size:12px;margin:6px 0">or</div>':'')+
+    '<input id="email" placeholder="email" value=""><input id="pw" type="password" placeholder="password" value="">'+
+    '<button class="btn" id="loginBtn" style="width:100%">Sign in</button><div class="err" id="loginErr"></div></div></div>';
+  document.querySelectorAll(".seed button").forEach((b)=> b.onclick = () => {
+    const u = CFG.seededUsers[Number(b.dataset.i)]; $("#email").value=u.email; $("#pw").value=u.password; doLogin();
+  });
+  $("#loginBtn").onclick = doLogin;
+}
+
+async function doLogin(){
+  const r = await api("POST","/api/auth/login",{ email:$("#email").value, password:$("#pw").value });
+  if (!r.ok){ $("#loginErr").textContent = r.data.error || "login failed"; return; }
+  TOKEN = r.data.token; USER = r.data.user; appShell();
+}
+
+function visiblePages(){
+  return CFG.ui.pages.filter(p => p.type !== "detail" && (!p.access || p.access.length===0 || p.access.includes(USER ? USER.role : "")));
+}
+
+function appShell(){
+  const pages = visiblePages();
+  if (CURRENT >= pages.length) CURRENT = 0;
+  const nav = pages.map((p,i)=>{
+    const plan = p.requiresPlan ? '<span class="badge">'+esc(p.requiresPlan)+'</span>' : '';
+    return '<div class="nav-item'+(i===CURRENT?' active':'')+'" data-i="'+i+'">'+esc(p.name)+plan+'</div>';
+  }).join("");
+  const who = USER ? '<div class="who">Signed in as <b>'+esc(USER.email)+'</b><br>role <b>'+esc(USER.role)+'</b> · plan <b>'+esc(USER.plan)+'</b><br><br><button class="btn ghost sm" id="logout">Log out</button></div>' : '';
+  $("#root").innerHTML =
+    '<div class="shell"><div class="side"><div class="appname">'+esc(CFG.appName)+'</div>'+nav+who+'</div>'+
+    '<div class="main" id="main"></div></div>';
+  document.querySelectorAll(".nav-item").forEach((el)=> el.onclick = ()=>{ CURRENT=Number(el.dataset.i); appShell(); });
+  if ($("#logout")) $("#logout").onclick = ()=>{ TOKEN=""; USER=null; CURRENT=0; loginScreen(); };
+  renderPage(pages[CURRENT]);
+}
+
+async function renderPage(page){
+  if (!page){ $("#main").innerHTML = '<div class="empty">No pages available for your role.</div>'; return; }
+  if (page.requiresPlan && USER && USER.plan !== page.requiresPlan){
+    $("#main").innerHTML = '<div class="head"><h2>'+esc(page.name)+'</h2></div>'+
+      '<div class="locked">🔒 This page requires the <b>'+esc(page.requiresPlan)+'</b> plan.<br><br><button class="btn" id="goPricing">See pricing</button></div>';
+    const gp = $("#goPricing"); if (gp) gp.onclick = ()=>{ const pi = visiblePages().findIndex(p=>p.type==="pricing"); if(pi>=0){CURRENT=pi;appShell();} };
+    return;
+  }
+  if (page.type === "list") return renderList(page);
+  if (page.type === "form") return renderForm(page, null);
+  if (page.type === "dashboard") return renderDashboard(page);
+  if (page.type === "pricing") return renderPricing(page);
+  $("#main").innerHTML = '<div class="head"><h2>'+esc(page.name)+'</h2></div><div class="empty">'+esc(page.type)+' page</div>';
+}
+
+async function renderList(page){
+  const cols = page.columns || [];
+  const r = await api("GET", page.dataSource);
+  const rows = r.ok ? (r.data||[]) : [];
+  let html = '<div class="head"><h2>'+esc(page.name)+'</h2><button class="btn" id="newBtn">＋ New</button></div>';
+  if (!rows.length) html += '<div class="empty">No records yet — click “＋ New”.</div>';
+  else {
+    html += '<table><thead><tr>'+cols.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'<th></th></tr></thead><tbody>'+
+      rows.map(row=>'<tr>'+cols.map(c=>'<td>'+esc(fmt(row[snake(c.field)]))+'</td>').join('')+
+      '<td><button class="btn ghost sm" data-del="'+esc(row.id)+'">Delete</button></td></tr>').join('')+'</tbody></table>';
+  }
+  $("#main").innerHTML = html;
+  $("#newBtn").onclick = ()=> renderForm(page, ()=>renderList(page));
+  document.querySelectorAll("[data-del]").forEach((b)=> b.onclick = async ()=>{
+    await api("DELETE", page.dataSource + "/" + b.dataset.del); toast("Deleted"); renderList(page);
+  });
+}
+
+function inputFor(f){
+  if (f.type === "enum") return '<select id="f_'+f.field+'">'+(f.enumValues||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
+  if (f.type === "boolean") return '<select id="f_'+f.field+'"><option value="false">No</option><option value="true">Yes</option></select>';
+  if (f.type === "text") return '<textarea id="f_'+f.field+'" rows="3"></textarea>';
+  const t = (f.type==="integer"||f.type==="number")?"number":(f.type==="date"||f.type==="datetime")?"date":(f.type==="email")?"email":"text";
+  return '<input id="f_'+f.field+'" type="'+t+'">';
+}
+
+function renderForm(page, onDone){
+  // find the matching list page to submit + return to
+  const submit = page.submitTo || { method:"POST", path:page.dataSource };
+  const ent = page.entity;
+  const fields = page.formFields || ((CFG.ui.pages.find(p=>p.type==="form"&&p.entity===ent)||{}).formFields) || [];
+  let html = '<div class="head"><h2>'+esc(page.name||("New "+(ent||"record")))+'</h2></div><div class="form">'+
+    fields.map(f=>'<label>'+esc(f.label)+(f.required?' *':'')+'</label>'+inputFor(f)).join('')+
+    '<button class="btn" id="saveBtn" style="margin-top:8px">Save</button><div class="err" id="formErr"></div></div>';
+  $("#main").innerHTML = html;
+  $("#saveBtn").onclick = async ()=>{
+    const body = {};
+    for (const f of fields){
+      const el = $("#f_"+f.field); if(!el) continue;
+      let v = el.value;
+      if (f.type==="boolean") v = v==="true";
+      else if (f.type==="integer") v = parseInt(v||"0",10);
+      else if (f.type==="number") v = parseFloat(v||"0");
+      if (v!=="" && v!=null) body[f.field]=v;
+    }
+    const r = await api("POST", submit.path, body);
+    if (!r.ok){ $("#formErr").textContent = r.data.error || "save failed"; return; }
+    toast("Saved ✓");
+    if (onDone) onDone(); else { CURRENT = visiblePages().findIndex(p=>p.type==="list"&&p.entity===ent); if(CURRENT<0)CURRENT=0; appShell(); }
+  };
+}
+
+async function renderDashboard(page){
+  let html = '<div class="head"><h2>'+esc(page.name)+'</h2></div><div class="widgets" id="wg"></div>';
+  $("#main").innerHTML = html;
+  const wrap = $("#wg");
+  for (const w of (page.widgets||[])){
+    let val = "—";
+    if (w.dataSource){ const r = await api("GET", w.dataSource); val = r.ok ? (Array.isArray(r.data)?r.data.length:"—") : "—"; }
+    const d = document.createElement("div"); d.className="widget";
+    d.innerHTML = '<div class="stat">'+esc(val)+'</div><div class="wlabel">'+esc(w.label)+'</div>';
+    wrap.appendChild(d);
+  }
+  if (!(page.widgets||[]).length) wrap.innerHTML = '<div class="empty">No widgets.</div>';
+}
+
+function renderPricing(page){
+  const plans = CFG.ui.plans || [];
+  $("#main").innerHTML = '<div class="head"><h2>Pricing</h2></div><div class="plans">'+
+    plans.map(pl=>{
+      const cur = USER && USER.plan===pl.name;
+      const feats = (pl.features||[]).map(f=>'<li>✓ '+esc(f)+'</li>').join('')||'<li>Core features</li>';
+      const price = pl.price>0 ? '$'+pl.price+'<span>/'+esc(pl.interval)+'</span>' : 'Free';
+      return '<div class="plan'+(cur?' cur':(pl.price>0?' feat':''))+'"><b style="text-transform:capitalize">'+esc(pl.name)+'</b>'+
+        '<div class="price">'+price+'</div><ul class="feats">'+feats+'</ul>'+
+        (cur?'<button class="btn ghost" disabled>Current plan</button>':'<button class="btn" data-plan="'+esc(pl.name)+'">'+(pl.price>0?'Upgrade':'Switch')+'</button>')+'</div>';
+    }).join('')+'</div>';
+  document.querySelectorAll("[data-plan]").forEach(b=> b.onclick = async ()=>{
+    const r = await api("POST","/api/billing/subscribe",{ plan:b.dataset.plan });
+    if (r.ok){ USER = r.data.user; toast("Now on "+USER.plan+" ✓"); appShell(); }
+  });
+}
+
+function fmt(v){ if (v===1) return "Yes"; if (v===0) return "No"; return v; }
+
+boot();
+</script>
+</body>
+</html>

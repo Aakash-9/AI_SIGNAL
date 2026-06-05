@@ -1,0 +1,55 @@
+{
+  "data": {
+    "appName": "Fitness Tracker",
+    "appType": "fitness tracking",
+    "summary": "A fitness tracking app allowing users to log workouts and exercises, view their history, with premium members accessing advanced analytics and charts.",
+    "entities": [
+      {
+        "name": "workout",
+        "fields": [
+          "userId",
+          "date",
+          "duration",
+          "type",
+          "exercises"
+        ]
+      },
+      {
+        "name": "exercise",
+        "fields": [
+          "workoutId",
+          "name",
+          "sets",
+          "reps",
+          "weight"
+        ]
+      }
+    ],
+    "roles": [
+      "member",
+      "premium member"
+    ],
+    "features": [
+      "workoutLogging",
+      "historyView",
+      "progressAnalytics",
+      "charts"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "Users will have accounts to log in.",
+      "Premium membership will be a subscription-based feature.",
+      "Analytics and charts will be generated based on logged workout and exercise data."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Fitness Tracker\",\n  \"appType\": \"fitness tracking\",\n  \"summary\": \"A fitness tracking app allowing users to log workouts and exercises, view their history, with premium members accessing advanced analytics and charts.\",\n  \"entities\": [\n    {\n      \"name\": \"workout\",\n      \"fields\": [\"userId\", \"date\", \"duration\", \"type\", \"exercises\"]\n    },\n    {\n      \"name\": \"exercise\",\n      \"fields\": [\"workoutId\", \"name\", \"sets\", \"reps\", \"weight\"]\n    }\n  ],\n  \"roles\": [\"member\", \"premium member\"],\n  \"features\": [\"workoutLogging\", \"historyView\", \"progressAnalytics\", \"charts\"],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Users will have accounts to log in.\",\n    \"Premium membership will be a subscription-based feature.\",\n    \"Analytics and charts will be generated based on logged workout and exercise data.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 434,
+    "outputTokens": 247
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1552
+}

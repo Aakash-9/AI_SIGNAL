@@ -1,0 +1,386 @@
+{
+  "data": {
+    "meta": {
+      "name": "RealEstateListings",
+      "description": "A real estate listings platform for agents to post properties, buyers to inquire, with admin moderation and featured listings for premium agents."
+    },
+    "entities": [
+      {
+        "name": "Property",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "bedrooms",
+            "type": "integer"
+          },
+          {
+            "name": "bathrooms",
+            "type": "integer"
+          },
+          {
+            "name": "squareFootage",
+            "type": "integer"
+          },
+          {
+            "name": "images",
+            "type": "url",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "pending_approval",
+              "approved",
+              "rejected",
+              "sold"
+            ],
+            "default": "pending_approval"
+          },
+          {
+            "name": "isFeatured",
+            "type": "boolean",
+            "default": false
+          }
+        ]
+      },
+      {
+        "name": "Inquiry",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "buyerName",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "buyerEmail",
+            "type": "email",
+            "required": true
+          },
+          {
+            "name": "buyerPhone",
+            "type": "string"
+          },
+          {
+            "name": "message",
+            "type": "text"
+          },
+          {
+            "name": "inquiryDate",
+            "type": "datetime",
+            "required": true
+          }
+        ],
+        "relations": [
+          {
+            "name": "property",
+            "kind": "manyToOne",
+            "target": "Property",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Agent",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "agent",
+        "description": "Can post and manage their own properties, send inquiries.",
+        "isDefault": true
+      },
+      {
+        "name": "buyer",
+        "description": "Can view properties and send inquiries."
+      },
+      {
+        "name": "admin",
+        "description": "Can moderate all properties and manage agents."
+      },
+      {
+        "name": "premiumAgent",
+        "description": "A premium agent with featured listing capabilities."
+      }
+    ],
+    "permissions": [
+      {
+        "role": "agent",
+        "entity": "Property",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "agent",
+        "entity": "Inquiry",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "buyer",
+        "entity": "Property",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "buyer",
+        "entity": "Inquiry",
+        "actions": [
+          "create"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Property",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Inquiry",
+        "actions": [
+          "read",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Agent",
+        "actions": [
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "premiumAgent",
+        "entity": "Property",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Properties List",
+        "route": "/properties",
+        "type": "list",
+        "entity": "Property",
+        "access": [
+          "agent",
+          "buyer",
+          "admin",
+          "premiumAgent"
+        ]
+      },
+      {
+        "name": "Property Detail",
+        "route": "/properties/:id",
+        "type": "detail",
+        "entity": "Property",
+        "access": [
+          "agent",
+          "buyer",
+          "admin",
+          "premiumAgent"
+        ]
+      },
+      {
+        "name": "New Property",
+        "route": "/properties/new",
+        "type": "form",
+        "entity": "Property",
+        "access": [
+          "agent",
+          "premiumAgent"
+        ]
+      },
+      {
+        "name": "Edit Property",
+        "route": "/properties/:id/edit",
+        "type": "form",
+        "entity": "Property",
+        "access": [
+          "agent",
+          "premiumAgent"
+        ]
+      },
+      {
+        "name": "New Inquiry",
+        "route": "/inquiries/new/:propertyId",
+        "type": "form",
+        "entity": "Inquiry",
+        "access": [
+          "buyer"
+        ],
+        "fields": [
+          "buyerName",
+          "buyerEmail",
+          "buyerPhone",
+          "message"
+        ]
+      },
+      {
+        "name": "Agent Properties",
+        "route": "/my-properties",
+        "type": "list",
+        "entity": "Property",
+        "access": [
+          "agent",
+          "premiumAgent"
+        ]
+      },
+      {
+        "name": "Admin Dashboard",
+        "route": "/admin/dashboard",
+        "type": "dashboard",
+        "access": [
+          "admin"
+        ],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Properties",
+            "entity": "Property",
+            "metric": "count"
+          },
+          {
+            "type": "stat",
+            "label": "Pending Approvals",
+            "entity": "Property",
+            "metric": "count",
+            "filter": {
+              "status": "pending_approval"
+            }
+          },
+          {
+            "type": "stat",
+            "label": "Total Inquiries",
+            "entity": "Inquiry",
+            "metric": "count"
+          },
+          {
+            "type": "table",
+            "label": "Recent Inquiries",
+            "entity": "Inquiry",
+            "limit": 5
+          }
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true,
+        "features": [
+          "standard_listing"
+        ]
+      },
+      {
+        "name": "premium",
+        "price": 50,
+        "interval": "month",
+        "features": [
+          "featured_listing",
+          "priority_support"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "featuredListingGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "features": [
+            "featured_listing"
+          ],
+          "pages": [
+            "New Property",
+            "Edit Property"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "propertyOwnership",
+        "entity": "Property"
+      },
+      {
+        "type": "ownership",
+        "id": "agentOwnership",
+        "entity": "Agent"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"RealEstateListings\",\n    \"description\": \"A real estate listings platform for agents to post properties, buyers to inquire, with admin moderation and featured listings for premium agents.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Property\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"address\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"price\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"bedrooms\",\n          \"type\": \"integer\"\n        },\n        {\n          \"name\": \"bathrooms\",\n          \"type\": \"integer\"\n        },\n        {\n          \"name\": \"squareFootage\",\n          \"type\": \"integer\"\n        },\n        {\n          \"name\": \"images\",\n          \"type\": \"url\",\n          \"required\": true\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"pending_approval\",\n            \"approved\",\n            \"rejected\",\n            \"sold\"\n          ],\n          \"default\": \"pending_approval\"\n        },\n        {\n          \"name\": \"isFeatured\",\n          \"type\": \"boolean\",\n          \"default\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"Inquiry\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"buyerName\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"buyerEmail\",\n          \"type\": \"email\",\n          \"required\": true\n        },\n        {\n          \"name\": \"buyerPhone\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"message\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"inquiryDate\",\n          \"type\": \"datetime\",\n          \"required\": true\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"property\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Property\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Agent\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"email\",\n          \"type\": \"email\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"phone\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"company\",\n          \"type\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"agent\",\n      \"description\": \"Can post and manage their own properties, send inquiries.\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"buyer\",\n      \"description\": \"Can view properties and send inquiries.\"\n    },\n    {\n      \"name\": \"admin\",\n      \"description\": \"Can moderate all properties and manage agents.\"\n    },\n    {\n      \"name\": \"premiumAgent\",\n      \"description\": \"A premium agent with featured listing capabilities.\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"agent\",\n      \"entity\": \"Property\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"agent\",\n      \"entity\": \"Inquiry\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"buyer\",\n      \"entity\": \"Property\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"buyer\",\n      \"entity\": \"Inquiry\",\n      \"actions\": [\n        \"create\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Property\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Inquiry\",\n      \"actions\": [\n        \"read\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Agent\",\n      \"actions\": [\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"premiumAgent\",\n      \"entity\": \"Property\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Properties List\",\n      \"route\": \"/properties\",\n      \"type\": \"list\",\n      \"entity\": \"Property\",\n      \"access\": [\n        \"agent\",\n        \"buyer\",\n        \"admin\",\n        \"premiumAgent\"\n      ]\n    },\n    {\n      \"name\": \"Property Detail\",\n      \"route\": \"/properties/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Property\",\n      \"access\": [\n        \"agent\",\n        \"buyer\",\n        \"admin\",\n        \"premiumAgent\"\n      ]\n    },\n    {\n      \"name\": \"New Property\",\n      \"route\": \"/properties/new\",\n      \"type\": \"form\",\n      \"entity\": \"Property\",\n      \"access\": [\n        \"agent\",\n        \"premiumAgent\"\n      ]\n    },\n    {\n      \"name\": \"Edit Property\",\n      \"route\": \"/properties/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Property\",\n      \"access\": [\n        \"agent\",\n        \"premiumAgent\"\n      ]\n    },\n    {\n      \"name\": \"New Inquiry\",\n      \"route\": \"/inquiries/new/:propertyId\",\n      \"type\": \"form\",\n      \"entity\": \"Inquiry\",\n      \"access\": [\n        \"buyer\"\n      ],\n      \"fields\": [\n        \"buyerName\",\n        \"buyerEmail\",\n        \"buyerPhone\",\n        \"message\"\n      ]\n    },\n    {\n      \"name\": \"Agent Properties\",\n      \"route\": \"/my-properties\",\n      \"type\": \"list\",\n      \"entity\": \"Property\",\n      \"access\": [\n        \"agent\",\n        \"premiumAgent\"\n      ]\n    },\n    {\n      \"name\": \"Admin Dashboard\",\n      \"route\": \"/admin/dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Properties\",\n          \"entity\": \"Property\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Pending Approvals\",\n          \"entity\": \"Property\",\n          \"metric\": \"count\",\n          \"filter\": { \"status\": \"pending_approval\" }\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Inquiries\",\n          \"entity\": \"Inquiry\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"table\",\n          \"label\": \"Recent Inquiries\",\n          \"entity\": \"Inquiry\",\n          \"limit\": 5\n        }\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true,\n      \"features\": [\n        \"standard_listing\"\n      ]\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 50,\n      \"interval\": \"month\",\n      \"features\": [\n        \"featured_listing\",\n        \"priority_support\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"featuredListingGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"features\": [\n          \"featured_listing\"\n        ],\n        \"pages\": [\n          \"New Property\",\n          \"Edit Property\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"propertyOwnership\",\n      \"entity\": \"Property\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"agentOwnership\",\n      \"entity\": \"Agent\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 2009,
+    "outputTokens": 2210
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 6698
+}

@@ -1,0 +1,218 @@
+{
+  "data": {
+    "meta": {
+      "name": "RecipeShare",
+      "description": "A recipe sharing app where users can post recipes, comment on them, and premium users get access to weekly meal planning."
+    },
+    "entities": [
+      {
+        "name": "Recipe",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "ingredients",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "steps",
+            "type": "text",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Comment",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "text",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "timestamp",
+            "type": "datetime",
+            "required": true
+          }
+        ],
+        "relations": [
+          {
+            "name": "recipe",
+            "kind": "manyToOne",
+            "target": "Recipe",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "MealPlan",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "weekStartDate",
+            "type": "date",
+            "required": true
+          }
+        ],
+        "relations": [
+          {
+            "name": "recipes",
+            "kind": "manyToMany",
+            "target": "Recipe"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "user",
+        "isDefault": true
+      },
+      {
+        "name": "premiumUser"
+      }
+    ],
+    "permissions": [
+      {
+        "role": "user",
+        "entity": "Recipe",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "user",
+        "entity": "Comment",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumUser",
+        "entity": "MealPlan",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own",
+        "requiresPlan": "premium"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Recipes",
+        "route": "/recipes",
+        "type": "list",
+        "entity": "Recipe",
+        "access": [
+          "user",
+          "premiumUser"
+        ]
+      },
+      {
+        "name": "New Recipe",
+        "route": "/recipes/new",
+        "type": "form",
+        "entity": "Recipe",
+        "access": [
+          "user",
+          "premiumUser"
+        ]
+      },
+      {
+        "name": "Recipe Detail",
+        "route": "/recipes/:id",
+        "type": "detail",
+        "entity": "Recipe",
+        "access": [
+          "user",
+          "premiumUser"
+        ]
+      },
+      {
+        "name": "Meal Plan",
+        "route": "/meal-plan",
+        "type": "custom",
+        "access": [
+          "premiumUser"
+        ],
+        "requiresPlan": "premium"
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "meal planning"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumMealPlanGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Meal Plan"
+          ],
+          "features": [
+            "meal planning"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "recipeOwnership",
+        "entity": "Recipe"
+      },
+      {
+        "type": "ownership",
+        "id": "commentOwnership",
+        "entity": "Comment"
+      },
+      {
+        "type": "ownership",
+        "id": "mealPlanOwnership",
+        "entity": "MealPlan"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"RecipeShare\",\n    \"description\": \"A recipe sharing app where users can post recipes, comment on them, and premium users get access to weekly meal planning.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Recipe\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"ingredients\",\n          \"type\": \"text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"steps\",\n          \"type\": \"text\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Comment\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"text\",\n          \"type\": \"text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"timestamp\",\n          \"type\": \"datetime\",\n          \"required\": true\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"recipe\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Recipe\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"MealPlan\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"weekStartDate\",\n          \"type\": \"date\",\n          \"required\": true\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"recipes\",\n          \"kind\": \"manyToMany\",\n          \"target\": \"Recipe\"\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"user\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premiumUser\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"user\",\n      \"entity\": \"Recipe\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"Comment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumUser\",\n      \"entity\": \"MealPlan\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\",\n      \"requiresPlan\": \"premium\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Recipes\",\n      \"route\": \"/recipes\",\n      \"type\": \"list\",\n      \"entity\": \"Recipe\",\n      \"access\": [\n        \"user\",\n        \"premiumUser\"\n      ]\n    },\n    {\n      \"name\": \"New Recipe\",\n      \"route\": \"/recipes/new\",\n      \"type\": \"form\",\n      \"entity\": \"Recipe\",\n      \"access\": [\n        \"user\",\n        \"premiumUser\"\n      ]\n    },\n    {\n      \"name\": \"Recipe Detail\",\n      \"route\": \"/recipes/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Recipe\",\n      \"access\": [\n        \"user\",\n        \"premiumUser\"\n      ]\n    },\n    {\n      \"name\": \"Meal Plan\",\n      \"route\": \"/meal-plan\",\n      \"type\": \"custom\",\n      \"access\": [\n        \"premiumUser\"\n      ],\n      \"requiresPlan\": \"premium\"\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"meal planning\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumMealPlanGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Meal Plan\"\n        ],\n        \"features\": [\n          \"meal planning\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"recipeOwnership\",\n      \"entity\": \"Recipe\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"commentOwnership\",\n      \"entity\": \"Comment\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"mealPlanOwnership\",\n      \"entity\": \"MealPlan\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1909,
+    "outputTokens": 1201
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 3741
+}

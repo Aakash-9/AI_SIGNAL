@@ -1,0 +1,75 @@
+{
+  "data": {
+    "appName": "E-commerce Store",
+    "appType": "Online Store",
+    "summary": "An online store enabling customers to browse products, place and track orders, while admins manage the product catalog and view sales, and premium sellers receive featured listings.",
+    "entities": [
+      {
+        "name": "Product",
+        "fields": [
+          "name",
+          "description",
+          "price",
+          "stockQuantity",
+          "imageUrl",
+          "category",
+          "sellerId",
+          "isFeatured"
+        ]
+      },
+      {
+        "name": "Order",
+        "fields": [
+          "orderNumber",
+          "customerId",
+          "orderDate",
+          "status",
+          "totalAmount",
+          "shippingAddress",
+          "paymentStatus",
+          "items"
+        ]
+      },
+      {
+        "name": "Seller",
+        "fields": [
+          "name",
+          "contactEmail",
+          "isPremium"
+        ]
+      }
+    ],
+    "roles": [
+      "customer",
+      "admin",
+      "seller"
+    ],
+    "features": [
+      "auth",
+      "productCatalog",
+      "orderPlacement",
+      "orderTracking",
+      "productManagement",
+      "salesReporting",
+      "featuredListings",
+      "payments",
+      "dashboard"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "Customers will need to register and log in to place orders.",
+      "Admins will have full control over product listings and seller management.",
+      "The 'items' field in an Order entity will likely reference a list of products and quantities."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"E-commerce Store\",\n  \"appType\": \"Online Store\",\n  \"summary\": \"An online store enabling customers to browse products, place and track orders, while admins manage the product catalog and view sales, and premium sellers receive featured listings.\",\n  \"entities\": [\n    {\n      \"name\": \"Product\",\n      \"fields\": [\"name\", \"description\", \"price\", \"stockQuantity\", \"imageUrl\", \"category\", \"sellerId\", \"isFeatured\"]\n    },\n    {\n      \"name\": \"Order\",\n      \"fields\": [\"orderNumber\", \"customerId\", \"orderDate\", \"status\", \"totalAmount\", \"shippingAddress\", \"paymentStatus\", \"items\"]\n    },\n    {\n      \"name\": \"Seller\",\n      \"fields\": [\"name\", \"contactEmail\", \"isPremium\"]\n    }\n  ],\n  \"roles\": [\"customer\", \"admin\", \"seller\"],\n  \"features\": [\n    \"auth\",\n    \"productCatalog\",\n    \"orderPlacement\",\n    \"orderTracking\",\n    \"productManagement\",\n    \"salesReporting\",\n    \"featuredListings\",\n    \"payments\",\n    \"dashboard\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Customers will need to register and log in to place orders.\",\n    \"Admins will have full control over product listings and seller management.\",\n    \"The 'items' field in an Order entity will likely reference a list of products and quantities.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 440,
+    "outputTokens": 364
+  },
+  "model": "gemini-2.5-flash",
+  "latencyMs": 6693
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+*.db
+*.sqlite
+*.sqlite3
+.DS_Store
+
+# NOTE: .cache/llm is intentionally committed — it's the warmed response cache
+# so the deployed demo serves the example prompts instantly (no API calls / quota).

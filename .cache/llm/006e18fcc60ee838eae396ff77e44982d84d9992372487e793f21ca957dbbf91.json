@@ -1,0 +1,123 @@
+{
+  "data": {
+    "appName": "SuperApp",
+    "appType": "Integrated Platform",
+    "summary": "A single application integrating social networking, a marketplace, online banking, ride-sharing, video streaming, and a dating service.",
+    "entities": [
+      {
+        "name": "User",
+        "fields": [
+          "profile",
+          "accountBalance",
+          "paymentMethods",
+          "rideHistory",
+          "streamingHistory",
+          "matches"
+        ]
+      },
+      {
+        "name": "Post",
+        "fields": [
+          "content",
+          "authorId",
+          "timestamp",
+          "likes",
+          "comments"
+        ]
+      },
+      {
+        "name": "Product",
+        "fields": [
+          "name",
+          "description",
+          "price",
+          "sellerId",
+          "imageUrl"
+        ]
+      },
+      {
+        "name": "Order",
+        "fields": [
+          "productId",
+          "buyerId",
+          "sellerId",
+          "orderDate",
+          "status"
+        ]
+      },
+      {
+        "name": "Ride",
+        "fields": [
+          "pickupLocation",
+          "dropoffLocation",
+          "driverId",
+          "riderId",
+          "fare",
+          "status"
+        ]
+      },
+      {
+        "name": "Video",
+        "fields": [
+          "title",
+          "description",
+          "url",
+          "uploaderId",
+          "views"
+        ]
+      },
+      {
+        "name": "DatingProfile",
+        "fields": [
+          "userId",
+          "bio",
+          "interests",
+          "photos"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "admin",
+      "seller",
+      "driver"
+    ],
+    "features": [
+      "socialNetworking",
+      "marketplace",
+      "onlineBanking",
+      "rideSharing",
+      "videoStreaming",
+      "datingService",
+      "auth",
+      "payments",
+      "messaging",
+      "notifications"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [
+      "The request asks to build 'everything in one app' which is extremely broad and complex, potentially leading to a poor user experience and technical challenges.",
+      "The scope of 'online banking' is not defined (e.g., basic transactions, investments, loans).",
+      "The integration points between these disparate services are not specified."
+    ],
+    "assumptions": [
+      "Users will have a single account across all services.",
+      "Payment processing will be handled securely and comply with financial regulations.",
+      "Data privacy and security will be paramount for all integrated services."
+    ],
+    "clarifyingQuestions": [
+      "What are the primary goals and target audience for this integrated application?",
+      "What specific functionalities are expected for each of the six services (social network, marketplace, online banking, ride-sharing, video streaming, dating)?",
+      "How should the different services interact with each other? For example, should users be able to buy items from the marketplace using their online banking funds?",
+      "What are the key performance indicators or success metrics for this application?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"SuperApp\",\n  \"appType\": \"Integrated Platform\",\n  \"summary\": \"A single application integrating social networking, a marketplace, online banking, ride-sharing, video streaming, and a dating service.\",\n  \"entities\": [\n    {\n      \"name\": \"User\",\n      \"fields\": [\n        \"profile\",\n        \"accountBalance\",\n        \"paymentMethods\",\n        \"rideHistory\",\n        \"streamingHistory\",\n        \"matches\"\n      ]\n    },\n    {\n      \"name\": \"Post\",\n      \"fields\": [\n        \"content\",\n        \"authorId\",\n        \"timestamp\",\n        \"likes\",\n        \"comments\"\n      ]\n    },\n    {\n      \"name\": \"Product\",\n      \"fields\": [\n        \"name\",\n        \"description\",\n        \"price\",\n        \"sellerId\",\n        \"imageUrl\"\n      ]\n    },\n    {\n      \"name\": \"Order\",\n      \"fields\": [\n        \"productId\",\n        \"buyerId\",\n        \"sellerId\",\n        \"orderDate\",\n        \"status\"\n      ]\n    },\n    {\n      \"name\": \"Ride\",\n      \"fields\": [\n        \"pickupLocation\",\n        \"dropoffLocation\",\n        \"driverId\",\n        \"riderId\",\n        \"fare\",\n        \"status\"\n      ]\n    },\n    {\n      \"name\": \"Video\",\n      \"fields\": [\n        \"title\",\n        \"description\",\n        \"url\",\n        \"uploaderId\",\n        \"views\"\n      ]\n    },\n    {\n      \"name\": \"DatingProfile\",\n      \"fields\": [\n        \"userId\",\n        \"bio\",\n        \"interests\",\n        \"photos\"\n      ]\n    }\n  ],\n  \"roles\": [\n    \"user\",\n    \"admin\",\n    \"seller\",\n    \"driver\"\n  ],\n  \"features\": [\n    \"socialNetworking\",\n    \"marketplace\",\n    \"onlineBanking\",\n    \"rideSharing\",\n    \"videoStreaming\",\n    \"datingService\",\n    \"auth\",\n    \"payments\",\n    \"messaging\",\n    \"notifications\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [\n    \"The request asks to build 'everything in one app' which is extremely broad and complex, potentially leading to a poor user experience and technical challenges.\",\n    \"The scope of 'online banking' is not defined (e.g., basic transactions, investments, loans).\",\n    \"The integration points between these disparate services are not specified.\"\n  ],\n  \"assumptions\": [\n    \"Users will have a single account across all services.\",\n    \"Payment processing will be handled securely and comply with financial regulations.\",\n    \"Data privacy and security will be paramount for all integrated services.\"\n  ],\n  \"clarifyingQuestions\": [\n    \"What are the primary goals and target audience for this integrated application?\",\n    \"What specific functionalities are expected for each of the six services (social network, marketplace, online banking, ride-sharing, video streaming, dating)?\",\n    \"How should the different services interact with each other? For example, should users be able to buy items from the marketplace using their online banking funds?\",\n    \"What are the key performance indicators or success metrics for this application?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 438,
+    "outputTokens": 773
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 3164
+}

@@ -1,0 +1,53 @@
+{
+  "data": {
+    "name": "Task",
+    "ownable": true,
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "name": "dueDate",
+        "type": "date"
+      },
+      {
+        "name": "status",
+        "type": "enum",
+        "enumValues": [
+          "notStarted",
+          "inProgress",
+          "completed",
+          "onHold"
+        ],
+        "default": "notStarted"
+      }
+    ],
+    "relations": [
+      {
+        "name": "project",
+        "kind": "manyToOne",
+        "target": "Project",
+        "required": true
+      },
+      {
+        "name": "assignee",
+        "kind": "manyToOne",
+        "target": "member",
+        "required": false
+      }
+    ]
+  },
+  "raw": "{\n  \"name\": \"Task\",\n  \"ownable\": true,\n  \"fields\": [\n    {\n      \"name\": \"name\",\n      \"type\": \"string\",\n      \"required\": true\n    },\n    {\n      \"name\": \"description\",\n      \"type\": \"text\"\n    },\n    {\n      \"name\": \"dueDate\",\n      \"type\": \"date\"\n    },\n    {\n      \"name\": \"status\",\n      \"type\": \"enum\",\n      \"enumValues\": [\n        \"notStarted\",\n        \"inProgress\",\n        \"completed\",\n        \"onHold\"\n      ],\n      \"default\": \"notStarted\"\n    }\n  ],\n  \"relations\": [\n    {\n      \"name\": \"project\",\n      \"kind\": \"manyToOne\",\n      \"target\": \"Project\",\n      \"required\": true\n    },\n    {\n      \"name\": \"assignee\",\n      \"kind\": \"manyToOne\",\n      \"target\": \"member\",\n      \"required\": false\n    }\n  ]\n}",
+  "usage": {
+    "inputTokens": 466,
+    "outputTokens": 247
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1426
+}

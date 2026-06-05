@@ -1,0 +1,502 @@
+{
+  "data": {
+    "meta": {
+      "name": "Online Learning Platform",
+      "description": "An online learning platform where instructors publish courses and students enroll, complete lessons, and provide reviews, with a freemium model offering access to paid courses and certificates via a premium subscription.",
+      "version": "1.0.0",
+      "theme": {
+        "primaryColor": "blue",
+        "fontSize": "large"
+      }
+    },
+    "entities": [
+      {
+        "name": "Course",
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true,
+            "unique": false
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "required": false,
+            "unique": false
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "required": false,
+            "unique": false,
+            "default": 0
+          },
+          {
+            "name": "isFree",
+            "type": "boolean",
+            "required": false,
+            "unique": false,
+            "default": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "lessons",
+            "kind": "oneToMany",
+            "target": "Lesson",
+            "required": false
+          },
+          {
+            "name": "reviews",
+            "kind": "oneToMany",
+            "target": "Review",
+            "required": false
+          }
+        ],
+        "ownable": true
+      },
+      {
+        "name": "Lesson",
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true,
+            "unique": false
+          },
+          {
+            "name": "videoUrl",
+            "type": "url",
+            "required": true,
+            "unique": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "course",
+            "kind": "manyToOne",
+            "target": "Course",
+            "required": true
+          }
+        ],
+        "ownable": false
+      },
+      {
+        "name": "Enrollment",
+        "fields": [
+          {
+            "name": "enrollmentDate",
+            "type": "datetime",
+            "required": true,
+            "unique": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "course",
+            "kind": "manyToOne",
+            "target": "Course",
+            "required": true
+          }
+        ],
+        "ownable": true
+      },
+      {
+        "name": "LessonCompletion",
+        "fields": [
+          {
+            "name": "completionDate",
+            "type": "datetime",
+            "required": true,
+            "unique": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "lesson",
+            "kind": "manyToOne",
+            "target": "Lesson",
+            "required": true
+          }
+        ],
+        "ownable": true
+      },
+      {
+        "name": "Review",
+        "fields": [
+          {
+            "name": "rating",
+            "type": "integer",
+            "required": true,
+            "unique": false
+          },
+          {
+            "name": "comment",
+            "type": "text",
+            "required": false,
+            "unique": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "course",
+            "kind": "manyToOne",
+            "target": "Course",
+            "required": true
+          }
+        ],
+        "ownable": true
+      }
+    ],
+    "roles": [
+      {
+        "name": "instructor",
+        "description": "Can create and manage courses.",
+        "isDefault": false
+      },
+      {
+        "name": "student",
+        "description": "Can enroll in courses, mark lessons complete, and review courses.",
+        "isDefault": true
+      },
+      {
+        "name": "premiumSubscriber",
+        "description": "Has access to paid courses and certificates.",
+        "isDefault": false
+      }
+    ],
+    "permissions": [
+      {
+        "role": "instructor",
+        "entity": "Course",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "instructor",
+        "entity": "Lesson",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "instructor",
+        "entity": "Enrollment",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "instructor",
+        "entity": "LessonCompletion",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "student",
+        "entity": "Course",
+        "actions": [
+          "read"
+        ],
+        "scope": "all",
+        "requiresPlan": "free"
+      },
+      {
+        "role": "student",
+        "entity": "Enrollment",
+        "actions": [
+          "create",
+          "read",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "student",
+        "entity": "LessonCompletion",
+        "actions": [
+          "create",
+          "read"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "student",
+        "entity": "Review",
+        "actions": [
+          "create",
+          "read"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumSubscriber",
+        "entity": "Course",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "premiumSubscriber",
+        "entity": "Enrollment",
+        "actions": [
+          "create",
+          "read",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumSubscriber",
+        "entity": "LessonCompletion",
+        "actions": [
+          "create",
+          "read"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumSubscriber",
+        "entity": "Review",
+        "actions": [
+          "create",
+          "read"
+        ],
+        "scope": "own"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Courses",
+        "route": "/courses",
+        "type": "list",
+        "entity": "Course",
+        "access": [
+          "instructor",
+          "student",
+          "premiumSubscriber"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "Course Detail",
+        "route": "/courses/:id",
+        "type": "detail",
+        "entity": "Course",
+        "access": [
+          "instructor",
+          "student",
+          "premiumSubscriber"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "New Course",
+        "route": "/courses/new",
+        "type": "form",
+        "entity": "Course",
+        "access": [
+          "instructor"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "Edit Course",
+        "route": "/courses/:id/edit",
+        "type": "form",
+        "entity": "Course",
+        "access": [
+          "instructor"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "Lessons",
+        "route": "/courses/:courseId/lessons",
+        "type": "list",
+        "entity": "Lesson",
+        "access": [
+          "instructor",
+          "student",
+          "premiumSubscriber"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "New Lesson",
+        "route": "/courses/:courseId/lessons/new",
+        "type": "form",
+        "entity": "Lesson",
+        "access": [
+          "instructor"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "Edit Lesson",
+        "route": "/courses/:courseId/lessons/:id/edit",
+        "type": "form",
+        "entity": "Lesson",
+        "access": [
+          "instructor"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "Instructor Dashboard",
+        "route": "/dashboard",
+        "type": "dashboard",
+        "access": [
+          "instructor"
+        ],
+        "fields": [],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Students Enrolled",
+            "entity": "Enrollment",
+            "metric": "count"
+          },
+          {
+            "type": "stat",
+            "label": "Total Lessons Completed",
+            "entity": "LessonCompletion",
+            "metric": "count"
+          }
+        ]
+      },
+      {
+        "name": "Student Dashboard",
+        "route": "/student-dashboard",
+        "type": "dashboard",
+        "access": [
+          "student",
+          "premiumSubscriber"
+        ],
+        "fields": [],
+        "widgets": [
+          {
+            "type": "table",
+            "label": "My Enrollments",
+            "entity": "Enrollment"
+          },
+          {
+            "type": "table",
+            "label": "My Lesson Completions",
+            "entity": "LessonCompletion"
+          }
+        ]
+      },
+      {
+        "name": "Certificate",
+        "route": "/certificate/:courseId",
+        "type": "custom",
+        "access": [
+          "premiumSubscriber"
+        ],
+        "fields": [],
+        "widgets": [],
+        "requiresPlan": "premium"
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumAccessGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Certificate"
+          ],
+          "entities": [],
+          "features": [
+            "access_paid_courses",
+            "certificates"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "courseOwnership",
+        "entity": "Course"
+      },
+      {
+        "type": "ownership",
+        "id": "enrollmentOwnership",
+        "entity": "Enrollment"
+      },
+      {
+        "type": "ownership",
+        "id": "lessonCompletionOwnership",
+        "entity": "LessonCompletion"
+      },
+      {
+        "type": "ownership",
+        "id": "reviewOwnership",
+        "entity": "Review"
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "price": 0,
+        "currency": "usd",
+        "interval": "month",
+        "isDefault": true,
+        "features": [
+          "access_free_courses"
+        ]
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "currency": "usd",
+        "interval": "month",
+        "isDefault": false,
+        "features": [
+          "access_paid_courses",
+          "certificates"
+        ]
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "providers": [],
+      "requireAuth": true
+    },
+    "assumptions": [
+      "Users will have distinct roles of 'instructor' and 'student'.",
+      "A 'premium subscription' implies a recurring payment model.",
+      "Completion certificates are generated upon completion of all lessons in a paid course.",
+      "Course ratings are numerical (e.g., 1-5 stars)."
+    ]
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Online Learning Platform\",\n    \"description\": \"An online learning platform where instructors publish courses and students enroll, complete lessons, and provide reviews, with a freemium model offering access to paid courses and certificates via a premium subscription.\",\n    \"version\": \"1.0.0\",\n    \"theme\": {\n      \"primaryColor\": \"blue\",\n      \"fontSize\": \"large\"\n    }\n  },\n  \"entities\": [\n    {\n      \"name\": \"Course\",\n      \"fields\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": false\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\",\n          \"required\": false,\n          \"unique\": false\n        },\n        {\n          \"name\": \"price\",\n          \"type\": \"number\",\n          \"required\": false,\n          \"unique\": false,\n          \"default\": 0\n        },\n        {\n          \"name\": \"isFree\",\n          \"type\": \"boolean\",\n          \"required\": false,\n          \"unique\": false,\n          \"default\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"lessons\",\n          \"kind\": \"oneToMany\",\n          \"target\": \"Lesson\",\n          \"required\": false\n        },\n        {\n          \"name\": \"reviews\",\n          \"kind\": \"oneToMany\",\n          \"target\": \"Review\",\n          \"required\": false\n        }\n      ],\n      \"ownable\": true\n    },\n    {\n      \"name\": \"Lesson\",\n      \"fields\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": false\n        },\n        {\n          \"name\": \"videoUrl\",\n          \"type\": \"url\",\n          \"required\": true,\n          \"unique\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"course\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Course\",\n          \"required\": true\n        }\n      ],\n      \"ownable\": false\n    },\n    {\n      \"name\": \"Enrollment\",\n      \"fields\": [\n        {\n          \"name\": \"enrollmentDate\",\n          \"type\": \"datetime\",\n          \"required\": true,\n          \"unique\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"course\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Course\",\n          \"required\": true\n        }\n      ],\n      \"ownable\": true\n    },\n    {\n      \"name\": \"LessonCompletion\",\n      \"fields\": [\n        {\n          \"name\": \"completionDate\",\n          \"type\": \"datetime\",\n          \"required\": true,\n          \"unique\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"lesson\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Lesson\",\n          \"required\": true\n        }\n      ],\n      \"ownable\": true\n    },\n    {\n      \"name\": \"Review\",\n      \"fields\": [\n        {\n          \"name\": \"rating\",\n          \"type\": \"integer\",\n          \"required\": true,\n          \"unique\": false\n        },\n        {\n          \"name\": \"comment\",\n          \"type\": \"text\",\n          \"required\": false,\n          \"unique\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"course\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Course\",\n          \"required\": true\n        }\n      ],\n      \"ownable\": true\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"instructor\",\n      \"description\": \"Can create and manage courses.\",\n      \"isDefault\": false\n    },\n    {\n      \"name\": \"student\",\n      \"description\": \"Can enroll in courses, mark lessons complete, and review courses.\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premiumSubscriber\",\n      \"description\": \"Has access to paid courses and certificates.\",\n      \"isDefault\": false\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"instructor\",\n      \"entity\": \"Course\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"instructor\",\n      \"entity\": \"Lesson\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"instructor\",\n      \"entity\": \"Enrollment\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"instructor\",\n      \"entity\": \"LessonCompletion\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"student\",\n      \"entity\": \"Course\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\",\n      \"requiresPlan\": \"free\"\n    },\n    {\n      \"role\": \"student\",\n      \"entity\": \"Enrollment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"student\",\n      \"entity\": \"LessonCompletion\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"student\",\n      \"entity\": \"Review\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumSubscriber\",\n      \"entity\": \"Course\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"premiumSubscriber\",\n      \"entity\": \"Enrollment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumSubscriber\",\n      \"entity\": \"LessonCompletion\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumSubscriber\",\n      \"entity\": \"Review\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Courses\",\n      \"route\": \"/courses\",\n      \"type\": \"list\",\n      \"entity\": \"Course\",\n      \"access\": [\n        \"instructor\",\n        \"student\",\n        \"premiumSubscriber\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"Course Detail\",\n      \"route\": \"/courses/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Course\",\n      \"access\": [\n        \"instructor\",\n        \"student\",\n        \"premiumSubscriber\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"New Course\",\n      \"route\": \"/courses/new\",\n      \"type\": \"form\",\n      \"entity\": \"Course\",\n      \"access\": [\n        \"instructor\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"Edit Course\",\n      \"route\": \"/courses/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Course\",\n      \"access\": [\n        \"instructor\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"Lessons\",\n      \"route\": \"/courses/:courseId/lessons\",\n      \"type\": \"list\",\n      \"entity\": \"Lesson\",\n      \"access\": [\n        \"instructor\",\n        \"student\",\n        \"premiumSubscriber\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"New Lesson\",\n      \"route\": \"/courses/:courseId/lessons/new\",\n      \"type\": \"form\",\n      \"entity\": \"Lesson\",\n      \"access\": [\n        \"instructor\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"Edit Lesson\",\n      \"route\": \"/courses/:courseId/lessons/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Lesson\",\n      \"access\": [\n        \"instructor\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"Instructor Dashboard\",\n      \"route\": \"/dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"instructor\"\n      ],\n      \"fields\": [],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Students Enrolled\",\n          \"entity\": \"Enrollment\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Lessons Completed\",\n          \"entity\": \"LessonCompletion\",\n          \"metric\": \"count\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Student Dashboard\",\n      \"route\": \"/student-dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"student\",\n        \"premiumSubscriber\"\n      ],\n      \"fields\": [],\n      \"widgets\": [\n        {\n          \"type\": \"table\",\n          \"label\": \"My Enrollments\",\n          \"entity\": \"Enrollment\"\n        },\n        {\n          \"type\": \"table\",\n          \"label\": \"My Lesson Completions\",\n          \"entity\": \"LessonCompletion\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Certificate\",\n      \"route\": \"/certificate/:courseId\",\n      \"type\": \"custom\",\n      \"access\": [\n        \"premiumSubscriber\"\n      ],\n      \"fields\": [],\n      \"widgets\": [],\n      \"requiresPlan\": \"premium\"\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumAccessGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Certificate\"\n        ],\n        \"entities\": [],\n        \"features\": [\n          \"access_paid_courses\",\n          \"certificates\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"courseOwnership\",\n      \"entity\": \"Course\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"enrollmentOwnership\",\n      \"entity\": \"Enrollment\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"lessonCompletionOwnership\",\n      \"entity\": \"LessonCompletion\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"reviewOwnership\",\n      \"entity\": \"Review\"\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"price\": 0,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"isDefault\": true,\n      \"features\": [\n        \"access_free_courses\"\n      ]\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"isDefault\": false,\n      \"features\": [\n        \"access_paid_courses\",\n        \"certificates\"\n      ]\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"providers\": [],\n    \"requireAuth\": true\n  },\n  \"assumptions\": [\n    \"Users will have distinct roles of 'instructor' and 'student'.\",\n    \"A 'premium subscription' implies a recurring payment model.\",\n    \"Completion certificates are generated upon completion of all lessons in a paid course.\",\n    \"Course ratings are numerical (e.g., 1-5 stars).\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 4568,
+    "outputTokens": 2992
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 6101
+}

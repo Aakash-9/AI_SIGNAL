@@ -1,0 +1,147 @@
+{
+  "data": {
+    "meta": {
+      "name": "Free Premium App",
+      "description": "A free application that offers exclusive features to premium subscribers who do not pay."
+    },
+    "entities": [
+      {
+        "name": "Subscriber",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "userId",
+            "type": "string",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "isPremium",
+            "type": "boolean",
+            "required": true,
+            "default": false
+          }
+        ]
+      },
+      {
+        "name": "Feature",
+        "ownable": false,
+        "fields": [
+          {
+            "name": "featureId",
+            "type": "string",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "isPaidOnly",
+            "type": "boolean",
+            "required": true,
+            "default": false
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "premiumSubscriber",
+        "description": "User with access to exclusive features",
+        "isDefault": false
+      },
+      {
+        "name": "standardUser",
+        "description": "Default user role",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "premiumSubscriber",
+        "entity": "Feature",
+        "actions": [
+          "read"
+        ],
+        "scope": "all",
+        "requiresPlan": "premium"
+      },
+      {
+        "role": "standardUser",
+        "entity": "Feature",
+        "actions": [
+          "read"
+        ],
+        "scope": "all",
+        "requiresPlan": "free"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Features List",
+        "route": "/features",
+        "type": "list",
+        "entity": "Feature",
+        "access": [
+          "premiumSubscriber",
+          "standardUser"
+        ]
+      },
+      {
+        "name": "Premium Feature Access",
+        "route": "/premium-feature",
+        "type": "custom",
+        "access": [
+          "premiumSubscriber"
+        ],
+        "requiresPlan": "premium"
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "price": 0,
+        "isDefault": true,
+        "features": [
+          "featureAccessControl"
+        ]
+      },
+      {
+        "name": "premium",
+        "price": 0,
+        "features": [
+          "featureAccessControl"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumFeatureGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Premium Feature Access"
+          ],
+          "features": [
+            "featureAccessControl"
+          ]
+        }
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Free Premium App\",\n    \"description\": \"A free application that offers exclusive features to premium subscribers who do not pay.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Subscriber\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"userId\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"isPremium\",\n          \"type\": \"boolean\",\n          \"required\": true,\n          \"default\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"Feature\",\n      \"ownable\": false,\n      \"fields\": [\n        {\n          \"name\": \"featureId\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"isPaidOnly\",\n          \"type\": \"boolean\",\n          \"required\": true,\n          \"default\": false\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"premiumSubscriber\",\n      \"description\": \"User with access to exclusive features\",\n      \"isDefault\": false\n    },\n    {\n      \"name\": \"standardUser\",\n      \"description\": \"Default user role\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"premiumSubscriber\",\n      \"entity\": \"Feature\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\",\n      \"requiresPlan\": \"premium\"\n    },\n    {\n      \"role\": \"standardUser\",\n      \"entity\": \"Feature\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\",\n      \"requiresPlan\": \"free\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Features List\",\n      \"route\": \"/features\",\n      \"type\": \"list\",\n      \"entity\": \"Feature\",\n      \"access\": [\n        \"premiumSubscriber\",\n        \"standardUser\"\n      ]\n    },\n    {\n      \"name\": \"Premium Feature Access\",\n      \"route\": \"/premium-feature\",\n      \"type\": \"custom\",\n      \"access\": [\n        \"premiumSubscriber\"\n      ],\n      \"requiresPlan\": \"premium\"\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"price\": 0,\n      \"isDefault\": true,\n      \"features\": [\n        \"featureAccessControl\"\n      ]\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 0,\n      \"features\": [\n        \"featureAccessControl\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumFeatureGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Premium Feature Access\"\n        ],\n        \"features\": [\n          \"featureAccessControl\"\n        ]\n      }\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1910,
+    "outputTokens": 811
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 3331
+}

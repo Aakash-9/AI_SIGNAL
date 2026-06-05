@@ -1,0 +1,104 @@
+{
+  "data": {
+    "meta": {
+      "name": "Todo App",
+      "description": "A simple application to manage personal tasks."
+    },
+    "entities": [
+      {
+        "name": "Task",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true,
+            "label": "Title"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "label": "Description"
+          },
+          {
+            "name": "dueDate",
+            "type": "date",
+            "label": "Due Date"
+          },
+          {
+            "name": "completed",
+            "type": "boolean",
+            "default": false,
+            "label": "Completed"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "user",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "user",
+        "entity": "Task",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Tasks",
+        "route": "/tasks",
+        "type": "list",
+        "entity": "Task",
+        "access": [
+          "user"
+        ]
+      },
+      {
+        "name": "New Task",
+        "route": "/tasks/new",
+        "type": "form",
+        "entity": "Task",
+        "access": [
+          "user"
+        ]
+      },
+      {
+        "name": "Task Detail",
+        "route": "/tasks/:id",
+        "type": "detail",
+        "entity": "Task",
+        "access": [
+          "user"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "ownership",
+        "id": "taskOwnership",
+        "entity": "Task"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Todo App\",\n    \"description\": \"A simple application to manage personal tasks.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Task\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"label\": \"Title\"\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\",\n          \"label\": \"Description\"\n        },\n        {\n          \"name\": \"dueDate\",\n          \"type\": \"date\",\n          \"label\": \"Due Date\"\n        },\n        {\n          \"name\": \"completed\",\n          \"type\": \"boolean\",\n          \"default\": false,\n          \"label\": \"Completed\"\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"user\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"user\",\n      \"entity\": \"Task\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Tasks\",\n      \"route\": \"/tasks\",\n      \"type\": \"list\",\n      \"entity\": \"Task\",\n      \"access\": [\n        \"user\"\n      ]\n    },\n    {\n      \"name\": \"New Task\",\n      \"route\": \"/tasks/new\",\n      \"type\": \"form\",\n      \"entity\": \"Task\",\n      \"access\": [\n        \"user\"\n      ]\n    },\n    {\n      \"name\": \"Task Detail\",\n      \"route\": \"/tasks/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Task\",\n      \"access\": [\n        \"user\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"ownership\",\n      \"id\": \"taskOwnership\",\n      \"entity\": \"Task\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1805,
+    "outputTokens": 546
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2389
+}

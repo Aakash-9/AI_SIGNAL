@@ -1,0 +1,295 @@
+{
+  "data": {
+    "meta": {
+      "name": "SalonBooker",
+      "description": "A booking app for a hair salon where customers can book appointments with stylists for services, staff can manage the schedule, and a premium feature unlocks SMS reminders."
+    },
+    "entities": [
+      {
+        "name": "Customer",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contactInfo",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Stylist",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "specialty",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Service",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "duration",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Appointment",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "dateTime",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "booked",
+              "confirmed",
+              "cancelled",
+              "completed"
+            ],
+            "default": "booked"
+          }
+        ],
+        "relations": [
+          {
+            "name": "customer",
+            "kind": "manyToOne",
+            "target": "Customer",
+            "required": true
+          },
+          {
+            "name": "stylist",
+            "kind": "manyToOne",
+            "target": "Stylist",
+            "required": true
+          },
+          {
+            "name": "service",
+            "kind": "manyToOne",
+            "target": "Service",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "customer",
+        "isDefault": true
+      },
+      {
+        "name": "stylist"
+      },
+      {
+        "name": "admin"
+      }
+    ],
+    "permissions": [
+      {
+        "role": "customer",
+        "entity": "Appointment",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "stylist",
+        "entity": "Appointment",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Customer",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Stylist",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Service",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Appointment",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Appointments",
+        "route": "/appointments",
+        "type": "list",
+        "entity": "Appointment",
+        "access": [
+          "customer",
+          "stylist",
+          "admin"
+        ]
+      },
+      {
+        "name": "Book Appointment",
+        "route": "/appointments/new",
+        "type": "form",
+        "entity": "Appointment",
+        "access": [
+          "customer"
+        ]
+      },
+      {
+        "name": "Manage Appointments",
+        "route": "/manage-appointments",
+        "type": "list",
+        "entity": "Appointment",
+        "access": [
+          "stylist",
+          "admin"
+        ]
+      },
+      {
+        "name": "Services",
+        "route": "/services",
+        "type": "list",
+        "entity": "Service",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Stylists",
+        "route": "/stylists",
+        "type": "list",
+        "entity": "Stylist",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Customers",
+        "route": "/customers",
+        "type": "list",
+        "entity": "Customer",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "SMS Reminders Settings",
+        "route": "/settings/sms",
+        "type": "custom",
+        "access": [
+          "admin"
+        ],
+        "requiresPlan": "premium"
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true,
+        "features": []
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "smsReminders"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "smsRemindersGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "SMS Reminders Settings"
+          ],
+          "features": [
+            "smsReminders"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "customerAppointmentOwnership",
+        "entity": "Appointment"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"SalonBooker\",\n    \"description\": \"A booking app for a hair salon where customers can book appointments with stylists for services, staff can manage the schedule, and a premium feature unlocks SMS reminders.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Customer\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"contactInfo\",\n          \"type\": \"string\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Stylist\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"specialty\",\n          \"type\": \"string\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Service\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"duration\",\n          \"type\": \"integer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"price\",\n          \"type\": \"number\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Appointment\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"dateTime\",\n          \"type\": \"datetime\",\n          \"required\": true\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"booked\",\n            \"confirmed\",\n            \"cancelled\",\n            \"completed\"\n          ],\n          \"default\": \"booked\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"customer\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Customer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"stylist\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Stylist\",\n          \"required\": true\n        },\n        {\n          \"name\": \"service\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Service\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"customer\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"stylist\"\n    },\n    {\n      \"name\": \"admin\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"customer\",\n      \"entity\": \"Appointment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"stylist\",\n      \"entity\": \"Appointment\",\n      \"actions\": [\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Customer\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Stylist\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Service\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Appointment\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Appointments\",\n      \"route\": \"/appointments\",\n      \"type\": \"list\",\n      \"entity\": \"Appointment\",\n      \"access\": [\n        \"customer\",\n        \"stylist\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Book Appointment\",\n      \"route\": \"/appointments/new\",\n      \"type\": \"form\",\n      \"entity\": \"Appointment\",\n      \"access\": [\n        \"customer\"\n      ]\n    },\n    {\n      \"name\": \"Manage Appointments\",\n      \"route\": \"/manage-appointments\",\n      \"type\": \"list\",\n      \"entity\": \"Appointment\",\n      \"access\": [\n        \"stylist\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Services\",\n      \"route\": \"/services\",\n      \"type\": \"list\",\n      \"entity\": \"Service\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Stylists\",\n      \"route\": \"/stylists\",\n      \"type\": \"list\",\n      \"entity\": \"Stylist\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Customers\",\n      \"route\": \"/customers\",\n      \"type\": \"list\",\n      \"entity\": \"Customer\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"SMS Reminders Settings\",\n      \"route\": \"/settings/sms\",\n      \"type\": \"custom\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"requiresPlan\": \"premium\"\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true,\n      \"features\": []\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"smsReminders\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"smsRemindersGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"SMS Reminders Settings\"\n        ],\n        \"features\": [\n          \"smsReminders\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"customerAppointmentOwnership\",\n      \"entity\": \"Appointment\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1965,
+    "outputTokens": 1634
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 5659
+}

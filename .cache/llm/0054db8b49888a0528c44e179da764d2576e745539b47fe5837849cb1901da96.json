@@ -1,0 +1,33 @@
+{
+  "data": {
+    "appName": "Dashboard App",
+    "appType": "dashboard",
+    "summary": "A generic dashboard application.",
+    "entities": [],
+    "roles": [],
+    "features": [
+      "dashboard"
+    ],
+    "hasAuth": false,
+    "hasPayments": false,
+    "ambiguities": [
+      "The request is extremely vague and does not specify what the dashboard should display or manage."
+    ],
+    "assumptions": [
+      "The user wants a basic dashboard interface."
+    ],
+    "clarifyingQuestions": [
+      "What specific data or metrics should the dashboard display?",
+      "What is the primary purpose of this dashboard?",
+      "Who are the intended users of this dashboard?",
+      "Are there any specific actions users should be able to perform from the dashboard?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"Dashboard App\",\n  \"appType\": \"dashboard\",\n  \"summary\": \"A generic dashboard application.\",\n  \"entities\": [],\n  \"roles\": [],\n  \"features\": [\n    \"dashboard\"\n  ],\n  \"hasAuth\": false,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The request is extremely vague and does not specify what the dashboard should display or manage.\"\n  ],\n  \"assumptions\": [\n    \"The user wants a basic dashboard interface.\"\n  ],\n  \"clarifyingQuestions\": [\n    \"What specific data or metrics should the dashboard display?\",\n    \"What is the primary purpose of this dashboard?\",\n    \"Who are the intended users of this dashboard?\",\n    \"Are there any specific actions users should be able to perform from the dashboard?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 413,
+    "outputTokens": 192
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1346
+}

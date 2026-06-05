@@ -1,0 +1,78 @@
+{
+  "data": {
+    "appName": "Project Manager",
+    "appType": "project management",
+    "summary": "A project management tool that allows users to create projects and tasks, add comments, and manage team members, with premium users gaining access to time tracking and managers viewing analytics.",
+    "entities": [
+      {
+        "name": "project",
+        "fields": [
+          "name",
+          "description",
+          "dueDate",
+          "status"
+        ]
+      },
+      {
+        "name": "task",
+        "fields": [
+          "name",
+          "description",
+          "dueDate",
+          "status",
+          "projectId",
+          "assigneeId"
+        ]
+      },
+      {
+        "name": "comment",
+        "fields": [
+          "text",
+          "timestamp",
+          "taskId",
+          "userId"
+        ]
+      },
+      {
+        "name": "timeEntry",
+        "fields": [
+          "startTime",
+          "endTime",
+          "duration",
+          "taskId",
+          "userId"
+        ]
+      }
+    ],
+    "roles": [
+      "manager",
+      "member",
+      "premiumMember"
+    ],
+    "features": [
+      "auth",
+      "dashboard",
+      "analytics",
+      "timeTracking",
+      "roleBasedAccess"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "Users will have different roles (manager, member, premium member).",
+      "Projects can contain multiple tasks.",
+      "Tasks can have multiple comments.",
+      "Time tracking is a feature available to premium members.",
+      "Analytics are specifically for managers."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Project Manager\",\n  \"appType\": \"project management\",\n  \"summary\": \"A project management tool that allows users to create projects and tasks, add comments, and manage team members, with premium users gaining access to time tracking and managers viewing analytics.\",\n  \"entities\": [\n    {\n      \"name\": \"project\",\n      \"fields\": [\"name\", \"description\", \"dueDate\", \"status\"]\n    },\n    {\n      \"name\": \"task\",\n      \"fields\": [\"name\", \"description\", \"dueDate\", \"status\", \"projectId\", \"assigneeId\"]\n    },\n    {\n      \"name\": \"comment\",\n      \"fields\": [\"text\", \"timestamp\", \"taskId\", \"userId\"]\n    },\n    {\n      \"name\": \"timeEntry\",\n      \"fields\": [\"startTime\", \"endTime\", \"duration\", \"taskId\", \"userId\"]\n    }\n  ],\n  \"roles\": [\"manager\", \"member\", \"premiumMember\"],\n  \"features\": [\"auth\", \"dashboard\", \"analytics\", \"timeTracking\", \"roleBasedAccess\"],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Users will have different roles (manager, member, premium member).\",\n    \"Projects can contain multiple tasks.\",\n    \"Tasks can have multiple comments.\",\n    \"Time tracking is a feature available to premium members.\",\n    \"Analytics are specifically for managers.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 436,
+    "outputTokens": 344
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1617
+}

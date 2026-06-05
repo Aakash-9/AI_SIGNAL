@@ -1,0 +1,45 @@
+{
+  "data": {
+    "appName": "Public Notes",
+    "appType": "notes app",
+    "summary": "A public notes app where anyone can view notes, but only admins can edit them, with role-based permissions.",
+    "entities": [
+      {
+        "name": "note",
+        "fields": [
+          "title",
+          "content",
+          "createdAt",
+          "updatedAt"
+        ]
+      }
+    ],
+    "roles": [
+      "admin",
+      "viewer"
+    ],
+    "features": [
+      "publicAccess",
+      "roleBasedAccess",
+      "noteManagement"
+    ],
+    "hasAuth": false,
+    "hasPayments": false,
+    "ambiguities": [
+      "The request states 'no login' but also 'admins can edit' and 'role-based permissions'. It's unclear how admins would be identified and how their roles would be managed without some form of authentication or user management system, even if it's not for general users."
+    ],
+    "assumptions": [
+      "Admins will be pre-configured or managed through a separate administrative interface not described in this request.",
+      "The 'viewer' role is implied for public access to notes.",
+      "Notes are the primary data entity."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Public Notes\",\n  \"appType\": \"notes app\",\n  \"summary\": \"A public notes app where anyone can view notes, but only admins can edit them, with role-based permissions.\",\n  \"entities\": [\n    {\n      \"name\": \"note\",\n      \"fields\": [\n        \"title\",\n        \"content\",\n        \"createdAt\",\n        \"updatedAt\"\n      ]\n    }\n  ],\n  \"roles\": [\n    \"admin\",\n    \"viewer\"\n  ],\n  \"features\": [\n    \"publicAccess\",\n    \"roleBasedAccess\",\n    \"noteManagement\"\n  ],\n  \"hasAuth\": false,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The request states 'no login' but also 'admins can edit' and 'role-based permissions'. It's unclear how admins would be identified and how their roles would be managed without some form of authentication or user management system, even if it's not for general users.\"\n  ],\n  \"assumptions\": [\n    \"Admins will be pre-configured or managed through a separate administrative interface not described in this request.\",\n    \"The 'viewer' role is implied for public access to notes.\",\n    \"Notes are the primary data entity.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 431,
+    "outputTokens": 305
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1817
+}

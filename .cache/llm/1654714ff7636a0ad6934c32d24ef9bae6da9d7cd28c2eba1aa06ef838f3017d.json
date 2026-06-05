@@ -1,0 +1,559 @@
+{
+  "data": {
+    "meta": {
+      "name": "SuperApp",
+      "description": "A single application integrating social networking, a marketplace, online banking, ride-sharing, video streaming, and a dating service."
+    },
+    "entities": [
+      {
+        "name": "Post",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "content",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "timestamp",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "name": "likes",
+            "type": "integer",
+            "default": 0
+          },
+          {
+            "name": "comments",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "name": "Product",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "imageUrl",
+            "type": "url"
+          }
+        ]
+      },
+      {
+        "name": "Order",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "orderDate",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "pending",
+              "processing",
+              "shipped",
+              "delivered",
+              "cancelled"
+            ],
+            "default": "pending"
+          }
+        ],
+        "relations": [
+          {
+            "name": "product",
+            "kind": "manyToOne",
+            "target": "Product",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Ride",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "pickupLocation",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "dropoffLocation",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "fare",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "requested",
+              "accepted",
+              "in_progress",
+              "completed",
+              "cancelled"
+            ],
+            "default": "requested"
+          }
+        ]
+      },
+      {
+        "name": "Video",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "url",
+            "type": "url",
+            "required": true
+          },
+          {
+            "name": "views",
+            "type": "integer",
+            "default": 0
+          }
+        ]
+      },
+      {
+        "name": "DatingProfile",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "bio",
+            "type": "text"
+          },
+          {
+            "name": "interests",
+            "type": "string"
+          },
+          {
+            "name": "photos",
+            "type": "url"
+          }
+        ]
+      },
+      {
+        "name": "Account",
+        "fields": [
+          {
+            "name": "accountBalance",
+            "type": "number",
+            "required": true,
+            "default": 0
+          }
+        ]
+      },
+      {
+        "name": "PaymentMethod",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "type",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "credit_card",
+              "debit_card",
+              "bank_account"
+            ]
+          },
+          {
+            "name": "details",
+            "type": "string",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "user",
+        "isDefault": true
+      },
+      {
+        "name": "admin"
+      },
+      {
+        "name": "seller"
+      },
+      {
+        "name": "driver"
+      }
+    ],
+    "permissions": [
+      {
+        "role": "user",
+        "entity": "Post",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "user",
+        "entity": "Product",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "seller",
+        "entity": "Product",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "user",
+        "entity": "Order",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "seller",
+        "entity": "Order",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "user",
+        "entity": "Ride",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "driver",
+        "entity": "Ride",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "user",
+        "entity": "Video",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "user",
+        "entity": "DatingProfile",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "user",
+        "entity": "Account",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "user",
+        "entity": "PaymentMethod",
+        "actions": [
+          "create",
+          "read",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "admin",
+        "entity": "Post",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Product",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Order",
+        "actions": [
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Ride",
+        "actions": [
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Video",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "DatingProfile",
+        "actions": [
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Account",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "PaymentMethod",
+        "actions": [
+          "read",
+          "delete"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Social Feed",
+        "route": "/feed",
+        "type": "list",
+        "entity": "Post",
+        "access": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "Marketplace",
+        "route": "/marketplace",
+        "type": "list",
+        "entity": "Product",
+        "access": [
+          "user",
+          "seller",
+          "admin"
+        ]
+      },
+      {
+        "name": "My Orders",
+        "route": "/my-orders",
+        "type": "list",
+        "entity": "Order",
+        "access": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "My Rides",
+        "route": "/my-rides",
+        "type": "list",
+        "entity": "Ride",
+        "access": [
+          "user",
+          "driver",
+          "admin"
+        ]
+      },
+      {
+        "name": "Video Library",
+        "route": "/videos",
+        "type": "list",
+        "entity": "Video",
+        "access": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "Dating Profiles",
+        "route": "/dating",
+        "type": "list",
+        "entity": "DatingProfile",
+        "access": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "Online Banking",
+        "route": "/banking",
+        "type": "dashboard",
+        "access": [
+          "user",
+          "admin"
+        ],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Account Balance",
+            "entity": "Account",
+            "metric": "sum",
+            "field": "accountBalance"
+          }
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "advanced_analytics",
+          "priority_support"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "ownership",
+        "id": "postOwnership",
+        "entity": "Post"
+      },
+      {
+        "type": "ownership",
+        "id": "productOwnership",
+        "entity": "Product"
+      },
+      {
+        "type": "ownership",
+        "id": "orderOwnership",
+        "entity": "Order"
+      },
+      {
+        "type": "ownership",
+        "id": "rideOwnership",
+        "entity": "Ride"
+      },
+      {
+        "type": "ownership",
+        "id": "videoOwnership",
+        "entity": "Video"
+      },
+      {
+        "type": "ownership",
+        "id": "datingProfileOwnership",
+        "entity": "DatingProfile"
+      },
+      {
+        "type": "ownership",
+        "id": "paymentMethodOwnership",
+        "entity": "PaymentMethod"
+      },
+      {
+        "type": "plan_gate",
+        "id": "premiumBankingFeatures",
+        "requiresPlan": "premium",
+        "gates": {
+          "features": [
+            "advanced_analytics",
+            "priority_support"
+          ]
+        }
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"SuperApp\",\n    \"description\": \"A single application integrating social networking, a marketplace, online banking, ride-sharing, video streaming, and a dating service.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Post\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"content\",\n          \"type\": \"text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"timestamp\",\n          \"type\": \"datetime\",\n          \"required\": true\n        },\n        {\n          \"name\": \"likes\",\n          \"type\": \"integer\",\n          \"default\": 0\n        },\n        {\n          \"name\": \"comments\",\n          \"type\": \"text\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Product\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"price\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"imageUrl\",\n          \"type\": \"url\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Order\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"orderDate\",\n          \"type\": \"datetime\",\n          \"required\": true\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"pending\",\n            \"processing\",\n            \"shipped\",\n            \"delivered\",\n            \"cancelled\"\n          ],\n          \"default\": \"pending\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"product\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Product\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"Ride\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"pickupLocation\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"dropoffLocation\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"fare\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"requested\",\n            \"accepted\",\n            \"in_progress\",\n            \"completed\",\n            \"cancelled\"\n          ],\n          \"default\": \"requested\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Video\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"url\",\n          \"type\": \"url\",\n          \"required\": true\n        },\n        {\n          \"name\": \"views\",\n          \"type\": \"integer\",\n          \"default\": 0\n        }\n      ]\n    },\n    {\n      \"name\": \"DatingProfile\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"bio\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"interests\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"photos\",\n          \"type\": \"url\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Account\",\n      \"fields\": [\n        {\n          \"name\": \"accountBalance\",\n          \"type\": \"number\",\n          \"required\": true,\n          \"default\": 0\n        }\n      ]\n    },\n    {\n      \"name\": \"PaymentMethod\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"type\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\"credit_card\", \"debit_card\", \"bank_account\"]\n        },\n        {\n          \"name\": \"details\",\n          \"type\": \"string\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"user\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"admin\"\n    },\n    {\n      \"name\": \"seller\"\n    },\n    {\n      \"name\": \"driver\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"user\",\n      \"entity\": \"Post\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"Product\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"seller\",\n      \"entity\": \"Product\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"Order\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"seller\",\n      \"entity\": \"Order\",\n      \"actions\": [\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"Ride\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"driver\",\n      \"entity\": \"Ride\",\n      \"actions\": [\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"Video\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"DatingProfile\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"Account\",\n      \"actions\": [\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"user\",\n      \"entity\": \"PaymentMethod\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Post\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Product\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Order\",\n      \"actions\": [\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Ride\",\n      \"actions\": [\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Video\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"DatingProfile\",\n      \"actions\": [\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Account\",\n      \"actions\": [\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"PaymentMethod\",\n      \"actions\": [\n        \"read\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Social Feed\",\n      \"route\": \"/feed\",\n      \"type\": \"list\",\n      \"entity\": \"Post\",\n      \"access\": [\n        \"user\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Marketplace\",\n      \"route\": \"/marketplace\",\n      \"type\": \"list\",\n      \"entity\": \"Product\",\n      \"access\": [\n        \"user\",\n        \"seller\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"My Orders\",\n      \"route\": \"/my-orders\",\n      \"type\": \"list\",\n      \"entity\": \"Order\",\n      \"access\": [\n        \"user\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"My Rides\",\n      \"route\": \"/my-rides\",\n      \"type\": \"list\",\n      \"entity\": \"Ride\",\n      \"access\": [\n        \"user\",\n        \"driver\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Video Library\",\n      \"route\": \"/videos\",\n      \"type\": \"list\",\n      \"entity\": \"Video\",\n      \"access\": [\n        \"user\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Dating Profiles\",\n      \"route\": \"/dating\",\n      \"type\": \"list\",\n      \"entity\": \"DatingProfile\",\n      \"access\": [\n        \"user\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Online Banking\",\n      \"route\": \"/banking\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"user\",\n        \"admin\"\n      ],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Account Balance\",\n          \"entity\": \"Account\",\n          \"metric\": \"sum\",\n          \"field\": \"accountBalance\"\n        }\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"advanced_analytics\",\n        \"priority_support\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"ownership\",\n      \"id\": \"postOwnership\",\n      \"entity\": \"Post\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"productOwnership\",\n      \"entity\": \"Product\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"orderOwnership\",\n      \"entity\": \"Order\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"rideOwnership\",\n      \"entity\": \"Ride\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"videoOwnership\",\n      \"entity\": \"Video\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"datingProfileOwnership\",\n      \"entity\": \"DatingProfile\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"paymentMethodOwnership\",\n      \"entity\": \"PaymentMethod\"\n    },\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumBankingFeatures\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"features\": [\n          \"advanced_analytics\",\n          \"priority_support\"\n        ]\n      }\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 2347,
+    "outputTokens": 3089
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 8529
+}

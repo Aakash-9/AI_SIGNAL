@@ -1,0 +1,274 @@
+{
+  "data": {
+    "meta": {
+      "name": "CRM",
+      "description": "A CRM application with user authentication, contact management, a dashboard, role-based access for admins and members, and a premium plan with payment processing and analytics for admins.",
+      "version": "1.0.0"
+    },
+    "entities": [
+      {
+        "name": "Contact",
+        "fields": [
+          {
+            "name": "firstName",
+            "type": "string",
+            "required": true,
+            "unique": false
+          },
+          {
+            "name": "lastName",
+            "type": "string",
+            "required": true,
+            "unique": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "phone",
+            "type": "string",
+            "required": false,
+            "unique": false
+          },
+          {
+            "name": "company",
+            "type": "string",
+            "required": false,
+            "unique": false
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": false,
+            "unique": false,
+            "enumValues": [
+              "lead",
+              "active",
+              "inactive"
+            ],
+            "default": "lead"
+          }
+        ],
+        "relations": [],
+        "ownable": true
+      },
+      {
+        "name": "Invoice",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "paid",
+              "unpaid"
+            ],
+            "default": "unpaid"
+          }
+        ],
+        "ownable": false
+      }
+    ],
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Administrator with full access",
+        "isDefault": false
+      },
+      {
+        "name": "member",
+        "description": "Standard user",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "member",
+        "entity": "Contact",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "admin",
+        "entity": "Contact",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Invoice",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Contacts",
+        "route": "/contacts",
+        "type": "list",
+        "entity": "Contact",
+        "access": [
+          "member",
+          "admin"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "New Contact",
+        "route": "/contacts/new",
+        "type": "form",
+        "entity": "Contact",
+        "access": [
+          "member",
+          "admin"
+        ],
+        "fields": [],
+        "widgets": []
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "type": "dashboard",
+        "access": [
+          "member",
+          "admin"
+        ],
+        "fields": [],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Contacts",
+            "entity": "Contact",
+            "metric": "count"
+          }
+        ]
+      },
+      {
+        "name": "Analytics",
+        "route": "/analytics",
+        "type": "dashboard",
+        "access": [
+          "admin"
+        ],
+        "fields": [],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Contacts",
+            "entity": "Contact",
+            "metric": "count"
+          },
+          {
+            "type": "chart",
+            "label": "Contacts by Status",
+            "entity": "Contact",
+            "metric": "count",
+            "field": "status"
+          }
+        ],
+        "requiresPlan": "premium"
+      },
+      {
+        "name": "Invoices",
+        "route": "/invoices",
+        "type": "list",
+        "entity": "Invoice",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "New Invoice",
+        "route": "/invoices/new",
+        "type": "form",
+        "entity": "Invoice",
+        "access": [
+          "admin"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumAnalyticsGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Analytics"
+          ],
+          "entities": [],
+          "features": [
+            "analytics"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "contactOwnership",
+        "entity": "Contact"
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "price": 0,
+        "currency": "usd",
+        "interval": "month",
+        "isDefault": true,
+        "features": []
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "currency": "usd",
+        "interval": "month",
+        "isDefault": false,
+        "features": [
+          "analytics"
+        ]
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "providers": [],
+      "requireAuth": true
+    },
+    "assumptions": [
+      "The CRM will manage contact information.",
+      "Users will have roles such as 'admin' and 'member'.",
+      "The 'premium plan' is a subscription-based payment model.",
+      "Analytics will be accessible to administrators."
+    ]
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"CRM\",\n    \"description\": \"A CRM application with user authentication, contact management, a dashboard, role-based access for admins and members, and a premium plan with payment processing and analytics for admins.\",\n    \"version\": \"1.0.0\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Contact\",\n      \"fields\": [\n        {\n          \"name\": \"firstName\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": false\n        },\n        {\n          \"name\": \"lastName\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"unique\": false\n        },\n        {\n          \"name\": \"email\",\n          \"type\": \"email\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"phone\",\n          \"type\": \"string\",\n          \"required\": false,\n          \"unique\": false\n        },\n        {\n          \"name\": \"company\",\n          \"type\": \"string\",\n          \"required\": false,\n          \"unique\": false\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": false,\n          \"unique\": false,\n          \"enumValues\": [\n            \"lead\",\n            \"active\",\n            \"inactive\"\n          ],\n          \"default\": \"lead\"\n        }\n      ],\n      \"relations\": [],\n      \"ownable\": true\n    },\n    {\n      \"name\": \"Invoice\",\n      \"fields\": [\n        {\n          \"name\": \"amount\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"paid\",\n            \"unpaid\"\n          ],\n          \"default\": \"unpaid\"\n        }\n      ],\n      \"ownable\": false\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"admin\",\n      \"description\": \"Administrator with full access\",\n      \"isDefault\": false\n    },\n    {\n      \"name\": \"member\",\n      \"description\": \"Standard user\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"member\",\n      \"entity\": \"Contact\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Contact\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Invoice\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Contacts\",\n      \"route\": \"/contacts\",\n      \"type\": \"list\",\n      \"entity\": \"Contact\",\n      \"access\": [\n        \"member\",\n        \"admin\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"New Contact\",\n      \"route\": \"/contacts/new\",\n      \"type\": \"form\",\n      \"entity\": \"Contact\",\n      \"access\": [\n        \"member\",\n        \"admin\"\n      ],\n      \"fields\": [],\n      \"widgets\": []\n    },\n    {\n      \"name\": \"Dashboard\",\n      \"route\": \"/dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"member\",\n        \"admin\"\n      ],\n      \"fields\": [],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Contacts\",\n          \"entity\": \"Contact\",\n          \"metric\": \"count\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Analytics\",\n      \"route\": \"/analytics\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"fields\": [],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Contacts\",\n          \"entity\": \"Contact\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"chart\",\n          \"label\": \"Contacts by Status\",\n          \"entity\": \"Contact\",\n          \"metric\": \"count\",\n          \"field\": \"status\"\n        }\n      ],\n      \"requiresPlan\": \"premium\"\n    },\n    {\n      \"name\": \"Invoices\",\n      \"route\": \"/invoices\",\n      \"type\": \"list\",\n      \"entity\": \"Invoice\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"New Invoice\",\n      \"route\": \"/invoices/new\",\n      \"type\": \"form\",\n      \"entity\": \"Invoice\",\n      \"access\": [\n        \"admin\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumAnalyticsGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Analytics\"\n        ],\n        \"entities\": [],\n        \"features\": [\n          \"analytics\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"contactOwnership\",\n      \"entity\": \"Contact\"\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"price\": 0,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"isDefault\": true,\n      \"features\": []\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"isDefault\": false,\n      \"features\": [\n        \"analytics\"\n      ]\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"providers\": [],\n    \"requireAuth\": true\n  },\n  \"assumptions\": [\n    \"The CRM will manage contact information.\",\n    \"Users will have roles such as 'admin' and 'member'.\",\n    \"The 'premium plan' is a subscription-based payment model.\",\n    \"Analytics will be accessible to administrators.\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 2912,
+    "outputTokens": 1587
+  },
+  "model": "gemini-2.5-flash",
+  "latencyMs": 9070
+}

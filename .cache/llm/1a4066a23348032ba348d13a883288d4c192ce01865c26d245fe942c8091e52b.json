@@ -1,0 +1,252 @@
+{
+  "data": {
+    "meta": {
+      "name": "Fitness Tracker",
+      "description": "A fitness tracking app allowing users to log workouts and exercises, view their history, with premium members accessing advanced analytics and charts."
+    },
+    "entities": [
+      {
+        "name": "Workout",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "name": "duration",
+            "type": "integer",
+            "required": true,
+            "label": "Duration (minutes)"
+          },
+          {
+            "name": "type",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "cardio",
+              "strength",
+              "flexibility",
+              "other"
+            ],
+            "default": "other"
+          }
+        ],
+        "relations": [
+          {
+            "name": "exercises",
+            "kind": "oneToMany",
+            "target": "Exercise"
+          }
+        ]
+      },
+      {
+        "name": "Exercise",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "sets",
+            "type": "integer"
+          },
+          {
+            "name": "reps",
+            "type": "integer"
+          },
+          {
+            "name": "weight",
+            "type": "number",
+            "label": "Weight (kg/lbs)"
+          }
+        ],
+        "relations": [
+          {
+            "name": "workout",
+            "kind": "manyToOne",
+            "target": "Workout",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "member",
+        "description": "Standard user",
+        "isDefault": true
+      },
+      {
+        "name": "premiumMember",
+        "description": "User with access to premium features"
+      }
+    ],
+    "permissions": [
+      {
+        "role": "member",
+        "entity": "Workout",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "member",
+        "entity": "Exercise",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumMember",
+        "entity": "Workout",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "premiumMember",
+        "entity": "Exercise",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Workouts",
+        "route": "/workouts",
+        "type": "list",
+        "entity": "Workout",
+        "access": [
+          "member",
+          "premiumMember"
+        ]
+      },
+      {
+        "name": "New Workout",
+        "route": "/workouts/new",
+        "type": "form",
+        "entity": "Workout",
+        "access": [
+          "member",
+          "premiumMember"
+        ]
+      },
+      {
+        "name": "Workout Detail",
+        "route": "/workouts/:id",
+        "type": "detail",
+        "entity": "Workout",
+        "access": [
+          "member",
+          "premiumMember"
+        ]
+      },
+      {
+        "name": "Progress Analytics",
+        "route": "/analytics",
+        "type": "dashboard",
+        "access": [
+          "premiumMember"
+        ],
+        "requiresPlan": "premium",
+        "widgets": [
+          {
+            "type": "chart",
+            "label": "Workouts Over Time",
+            "entity": "Workout",
+            "chartType": "line",
+            "xField": "date",
+            "yField": "duration",
+            "metric": "sum"
+          },
+          {
+            "type": "stat",
+            "label": "Total Workouts Logged",
+            "entity": "Workout",
+            "metric": "count"
+          },
+          {
+            "type": "chart",
+            "label": "Exercise Distribution",
+            "entity": "Exercise",
+            "chartType": "pie",
+            "field": "name"
+          }
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "isDefault": true
+      },
+      {
+        "name": "premium",
+        "price": 9.99,
+        "interval": "month",
+        "features": [
+          "progressAnalytics",
+          "charts"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumFeaturesGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Progress Analytics"
+          ],
+          "features": [
+            "progressAnalytics",
+            "charts"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "workoutOwnership",
+        "entity": "Workout"
+      },
+      {
+        "type": "ownership",
+        "id": "exerciseOwnership",
+        "entity": "Exercise"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Fitness Tracker\",\n    \"description\": \"A fitness tracking app allowing users to log workouts and exercises, view their history, with premium members accessing advanced analytics and charts.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Workout\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"date\",\n          \"type\": \"date\",\n          \"required\": true\n        },\n        {\n          \"name\": \"duration\",\n          \"type\": \"integer\",\n          \"required\": true,\n          \"label\": \"Duration (minutes)\"\n        },\n        {\n          \"name\": \"type\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"cardio\",\n            \"strength\",\n            \"flexibility\",\n            \"other\"\n          ],\n          \"default\": \"other\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"exercises\",\n          \"kind\": \"oneToMany\",\n          \"target\": \"Exercise\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Exercise\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"sets\",\n          \"type\": \"integer\"\n        },\n        {\n          \"name\": \"reps\",\n          \"type\": \"integer\"\n        },\n        {\n          \"name\": \"weight\",\n          \"type\": \"number\",\n          \"label\": \"Weight (kg/lbs)\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"workout\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Workout\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"member\",\n      \"description\": \"Standard user\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premiumMember\",\n      \"description\": \"User with access to premium features\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"member\",\n      \"entity\": \"Workout\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"member\",\n      \"entity\": \"Exercise\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumMember\",\n      \"entity\": \"Workout\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"premiumMember\",\n      \"entity\": \"Exercise\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Workouts\",\n      \"route\": \"/workouts\",\n      \"type\": \"list\",\n      \"entity\": \"Workout\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\"\n      ]\n    },\n    {\n      \"name\": \"New Workout\",\n      \"route\": \"/workouts/new\",\n      \"type\": \"form\",\n      \"entity\": \"Workout\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\"\n      ]\n    },\n    {\n      \"name\": \"Workout Detail\",\n      \"route\": \"/workouts/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Workout\",\n      \"access\": [\n        \"member\",\n        \"premiumMember\"\n      ]\n    },\n    {\n      \"name\": \"Progress Analytics\",\n      \"route\": \"/analytics\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"premiumMember\"\n      ],\n      \"requiresPlan\": \"premium\",\n      \"widgets\": [\n        {\n          \"type\": \"chart\",\n          \"label\": \"Workouts Over Time\",\n          \"entity\": \"Workout\",\n          \"chartType\": \"line\",\n          \"xField\": \"date\",\n          \"yField\": \"duration\",\n          \"metric\": \"sum\"\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Workouts Logged\",\n          \"entity\": \"Workout\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"chart\",\n          \"label\": \"Exercise Distribution\",\n          \"entity\": \"Exercise\",\n          \"chartType\": \"pie\",\n          \"field\": \"name\"\n        }\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 9.99,\n      \"interval\": \"month\",\n      \"features\": [\n        \"progressAnalytics\",\n        \"charts\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumFeaturesGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Progress Analytics\"\n        ],\n        \"features\": [\n          \"progressAnalytics\",\n          \"charts\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"workoutOwnership\",\n      \"entity\": \"Workout\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"exerciseOwnership\",\n      \"entity\": \"Exercise\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1865,
+    "outputTokens": 1437
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 5203
+}

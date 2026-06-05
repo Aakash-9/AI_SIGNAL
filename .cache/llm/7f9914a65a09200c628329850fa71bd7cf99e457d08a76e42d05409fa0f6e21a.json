@@ -1,0 +1,109 @@
+{
+  "data": {
+    "meta": {
+      "name": "Public Notes",
+      "description": "A public notes app where anyone can view notes, but only admins can edit them, with role-based permissions."
+    },
+    "entities": [
+      {
+        "name": "Note",
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "content",
+            "type": "text",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Can create, read, update, and delete notes."
+      },
+      {
+        "name": "viewer",
+        "description": "Can only read notes.",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "viewer",
+        "entity": "Note",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "admin",
+        "entity": "Note",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Notes List",
+        "route": "/notes",
+        "type": "list",
+        "entity": "Note",
+        "access": [
+          "viewer",
+          "admin"
+        ]
+      },
+      {
+        "name": "Note Detail",
+        "route": "/notes/:id",
+        "type": "detail",
+        "entity": "Note",
+        "access": [
+          "viewer",
+          "admin"
+        ]
+      },
+      {
+        "name": "New Note",
+        "route": "/notes/new",
+        "type": "form",
+        "entity": "Note",
+        "access": [
+          "admin"
+        ]
+      },
+      {
+        "name": "Edit Note",
+        "route": "/notes/:id/edit",
+        "type": "form",
+        "entity": "Note",
+        "access": [
+          "admin"
+        ]
+      }
+    ],
+    "businessRules": [],
+    "auth": {
+      "strategy": "none",
+      "requireAuth": false
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Public Notes\",\n    \"description\": \"A public notes app where anyone can view notes, but only admins can edit them, with role-based permissions.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Note\",\n      \"fields\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"text\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"admin\",\n      \"description\": \"Can create, read, update, and delete notes.\"\n    },\n    {\n      \"name\": \"viewer\",\n      \"description\": \"Can only read notes.\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"viewer\",\n      \"entity\": \"Note\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Note\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Notes List\",\n      \"route\": \"/notes\",\n      \"type\": \"list\",\n      \"entity\": \"Note\",\n      \"access\": [\n        \"viewer\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Note Detail\",\n      \"route\": \"/notes/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Note\",\n      \"access\": [\n        \"viewer\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"New Note\",\n      \"route\": \"/notes/new\",\n      \"type\": \"form\",\n      \"entity\": \"Note\",\n      \"access\": [\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Edit Note\",\n      \"route\": \"/notes/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Note\",\n      \"access\": [\n        \"admin\"\n      ]\n    }\n  ],\n  \"businessRules\": [],\n  \"auth\": {\n    \"strategy\": \"none\",\n    \"requireAuth\": false\n  }\n}",
+  "usage": {
+    "inputTokens": 1872,
+    "outputTokens": 592
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2515
+}

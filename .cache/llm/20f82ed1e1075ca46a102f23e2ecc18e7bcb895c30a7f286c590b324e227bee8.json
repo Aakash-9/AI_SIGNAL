@@ -1,0 +1,49 @@
+{
+  "data": {
+    "appName": "Free Premium App",
+    "appType": "Subscription Management",
+    "summary": "A free application that offers exclusive features to premium subscribers who do not pay.",
+    "entities": [
+      {
+        "name": "Subscriber",
+        "fields": [
+          "userId",
+          "isPremium"
+        ]
+      },
+      {
+        "name": "Feature",
+        "fields": [
+          "featureId",
+          "name",
+          "isPaidOnly"
+        ]
+      }
+    ],
+    "roles": [],
+    "features": [
+      "featureAccessControl"
+    ],
+    "hasAuth": true,
+    "hasPayments": false,
+    "ambiguities": [
+      "The request states that premium subscribers pay nothing but still unlock exclusive paid-only features, which is contradictory. It's unclear how 'paid-only' features are defined if no payment is involved."
+    ],
+    "assumptions": [
+      "The app will have a mechanism to identify 'premium' subscribers, even if they don't pay.",
+      "The term 'paid-only features' is a misnomer and should be interpreted as 'premium-only features'."
+    ],
+    "clarifyingQuestions": [
+      "How will users be designated as 'premium subscribers' if they do not pay?",
+      "What is the business model or purpose of offering 'paid-only' features for free?",
+      "What specific exclusive features are intended for these premium subscribers?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"Free Premium App\",\n  \"appType\": \"Subscription Management\",\n  \"summary\": \"A free application that offers exclusive features to premium subscribers who do not pay.\",\n  \"entities\": [\n    {\n      \"name\": \"Subscriber\",\n      \"fields\": [\n        \"userId\",\n        \"isPremium\"\n      ]\n    },\n    {\n      \"name\": \"Feature\",\n      \"fields\": [\n        \"featureId\",\n        \"name\",\n        \"isPaidOnly\"\n      ]\n    }\n  ],\n  \"roles\": [],\n  \"features\": [\n    \"featureAccessControl\"\n  ],\n  \"hasAuth\": true,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The request states that premium subscribers pay nothing but still unlock exclusive paid-only features, which is contradictory. It's unclear how 'paid-only' features are defined if no payment is involved.\"\n  ],\n  \"assumptions\": [\n    \"The app will have a mechanism to identify 'premium' subscribers, even if they don't pay.\",\n    \"The term 'paid-only features' is a misnomer and should be interpreted as 'premium-only features'.\"\n  ],\n  \"clarifyingQuestions\": [\n    \"How will users be designated as 'premium subscribers' if they do not pay?\",\n    \"What is the business model or purpose of offering 'paid-only' features for free?\",\n    \"What specific exclusive features are intended for these premium subscribers?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 428,
+    "outputTokens": 346
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2068
+}

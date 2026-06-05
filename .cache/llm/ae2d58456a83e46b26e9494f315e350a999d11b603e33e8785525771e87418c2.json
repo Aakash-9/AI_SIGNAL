@@ -1,0 +1,29 @@
+{
+  "data": {
+    "appName": "Business App",
+    "appType": "general business",
+    "summary": "A general application for a business.",
+    "entities": [],
+    "roles": [],
+    "features": [],
+    "hasAuth": false,
+    "hasPayments": false,
+    "ambiguities": [
+      "The request is too vague to determine the specific type of business or its needs."
+    ],
+    "assumptions": [],
+    "clarifyingQuestions": [
+      "What does your business do?",
+      "What specific tasks or processes should this app help manage?",
+      "What kind of data or records does your business need to track?",
+      "Who will be using this app and what will their roles be?"
+    ]
+  },
+  "raw": "{\n  \"appName\": \"Business App\",\n  \"appType\": \"general business\",\n  \"summary\": \"A general application for a business.\",\n  \"entities\": [],\n  \"roles\": [],\n  \"features\": [],\n  \"hasAuth\": false,\n  \"hasPayments\": false,\n  \"ambiguities\": [\n    \"The request is too vague to determine the specific type of business or its needs.\"\n  ],\n  \"assumptions\": [],\n  \"clarifyingQuestions\": [\n    \"What does your business do?\",\n    \"What specific tasks or processes should this app help manage?\",\n    \"What kind of data or records does your business need to track?\",\n    \"Who will be using this app and what will their roles be?\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 418,
+    "outputTokens": 172
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1679
+}

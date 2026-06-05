@@ -1,0 +1,351 @@
+{
+  "data": {
+    "meta": {
+      "name": "Event Booking Platform",
+      "description": "A platform for organizers to create events and for attendees to reserve tickets, with premium features for organizers."
+    },
+    "entities": [
+      {
+        "name": "Event",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "name": "time",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "capacity",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "isFeatured",
+            "type": "boolean",
+            "default": false
+          }
+        ]
+      },
+      {
+        "name": "Ticket",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "type",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "quantity",
+            "type": "integer",
+            "required": true,
+            "default": 1
+          }
+        ],
+        "relations": [
+          {
+            "name": "event",
+            "kind": "manyToOne",
+            "target": "Event",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "OrganizerProfile",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contactInfo",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "name": "AttendeeProfile",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contactInfo",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "organizer",
+        "description": "Can create events and manage tickets.",
+        "isDefault": false
+      },
+      {
+        "name": "attendee",
+        "description": "Can reserve tickets for events.",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "organizer",
+        "entity": "Event",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "organizer",
+        "entity": "Ticket",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "attendee",
+        "entity": "Event",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "attendee",
+        "entity": "Ticket",
+        "actions": [
+          "create",
+          "read"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "organizer",
+        "entity": "OrganizerProfile",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "attendee",
+        "entity": "AttendeeProfile",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "own"
+      }
+    ],
+    "pages": [
+      {
+        "name": "My Events",
+        "route": "/my-events",
+        "type": "list",
+        "entity": "Event",
+        "access": [
+          "organizer"
+        ],
+        "fields": [
+          "name",
+          "date",
+          "location"
+        ]
+      },
+      {
+        "name": "Create Event",
+        "route": "/events/new",
+        "type": "form",
+        "entity": "Event",
+        "access": [
+          "organizer"
+        ]
+      },
+      {
+        "name": "Edit Event",
+        "route": "/events/:id/edit",
+        "type": "form",
+        "entity": "Event",
+        "access": [
+          "organizer"
+        ]
+      },
+      {
+        "name": "Event Details",
+        "route": "/events/:id",
+        "type": "detail",
+        "entity": "Event",
+        "access": [
+          "organizer",
+          "attendee"
+        ]
+      },
+      {
+        "name": "Book Tickets",
+        "route": "/events/:id/book",
+        "type": "form",
+        "entity": "Ticket",
+        "access": [
+          "attendee"
+        ]
+      },
+      {
+        "name": "My Tickets",
+        "route": "/my-tickets",
+        "type": "list",
+        "entity": "Ticket",
+        "access": [
+          "attendee"
+        ],
+        "fields": [
+          "event.name",
+          "type",
+          "quantity"
+        ]
+      },
+      {
+        "name": "Attendee List",
+        "route": "/events/:id/attendees",
+        "type": "list",
+        "entity": "Ticket",
+        "access": [
+          "organizer"
+        ],
+        "fields": [
+          "attendeeProfile.name",
+          "attendeeProfile.contactInfo",
+          "type",
+          "quantity"
+        ],
+        "requiresPlan": "premium"
+      },
+      {
+        "name": "Organizer Profile",
+        "route": "/profile/organizer",
+        "type": "form",
+        "entity": "OrganizerProfile",
+        "access": [
+          "organizer"
+        ]
+      },
+      {
+        "name": "Attendee Profile",
+        "route": "/profile/attendee",
+        "type": "form",
+        "entity": "AttendeeProfile",
+        "access": [
+          "attendee"
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "price": 0,
+        "isDefault": true,
+        "features": [
+          "basicEventCreation",
+          "ticketReservation"
+        ]
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "featuredEventPlacement",
+          "attendeeListManagement"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumFeaturesGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Attendee List"
+          ],
+          "features": [
+            "featuredEventPlacement",
+            "attendeeListManagement"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "eventOwnership",
+        "entity": "Event"
+      },
+      {
+        "type": "ownership",
+        "id": "ticketOwnership",
+        "entity": "Ticket"
+      },
+      {
+        "type": "ownership",
+        "id": "organizerProfileOwnership",
+        "entity": "OrganizerProfile"
+      },
+      {
+        "type": "ownership",
+        "id": "attendeeProfileOwnership",
+        "entity": "AttendeeProfile"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Event Booking Platform\",\n    \"description\": \"A platform for organizers to create events and for attendees to reserve tickets, with premium features for organizers.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Event\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\"\n        },\n        {\n          \"name\": \"date\",\n          \"type\": \"date\",\n          \"required\": true\n        },\n        {\n          \"name\": \"time\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"location\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"capacity\",\n          \"type\": \"integer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"isFeatured\",\n          \"type\": \"boolean\",\n          \"default\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"Ticket\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"type\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"price\",\n          \"type\": \"number\",\n          \"required\": true\n        },\n        {\n          \"name\": \"quantity\",\n          \"type\": \"integer\",\n          \"required\": true,\n          \"default\": 1\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"event\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Event\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"OrganizerProfile\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"contactInfo\",\n          \"type\": \"text\"\n        }\n      ]\n    },\n    {\n      \"name\": \"AttendeeProfile\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"contactInfo\",\n          \"type\": \"text\"\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"organizer\",\n      \"description\": \"Can create events and manage tickets.\",\n      \"isDefault\": false\n    },\n    {\n      \"name\": \"attendee\",\n      \"description\": \"Can reserve tickets for events.\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"organizer\",\n      \"entity\": \"Event\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"organizer\",\n      \"entity\": \"Ticket\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"attendee\",\n      \"entity\": \"Event\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"attendee\",\n      \"entity\": \"Ticket\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"organizer\",\n      \"entity\": \"OrganizerProfile\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"attendee\",\n      \"entity\": \"AttendeeProfile\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"own\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"My Events\",\n      \"route\": \"/my-events\",\n      \"type\": \"list\",\n      \"entity\": \"Event\",\n      \"access\": [\n        \"organizer\"\n      ],\n      \"fields\": [\n        \"name\",\n        \"date\",\n        \"location\"\n      ]\n    },\n    {\n      \"name\": \"Create Event\",\n      \"route\": \"/events/new\",\n      \"type\": \"form\",\n      \"entity\": \"Event\",\n      \"access\": [\n        \"organizer\"\n      ]\n    },\n    {\n      \"name\": \"Edit Event\",\n      \"route\": \"/events/:id/edit\",\n      \"type\": \"form\",\n      \"entity\": \"Event\",\n      \"access\": [\n        \"organizer\"\n      ]\n    },\n    {\n      \"name\": \"Event Details\",\n      \"route\": \"/events/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Event\",\n      \"access\": [\n        \"organizer\",\n        \"attendee\"\n      ]\n    },\n    {\n      \"name\": \"Book Tickets\",\n      \"route\": \"/events/:id/book\",\n      \"type\": \"form\",\n      \"entity\": \"Ticket\",\n      \"access\": [\n        \"attendee\"\n      ]\n    },\n    {\n      \"name\": \"My Tickets\",\n      \"route\": \"/my-tickets\",\n      \"type\": \"list\",\n      \"entity\": \"Ticket\",\n      \"access\": [\n        \"attendee\"\n      ],\n      \"fields\": [\n        \"event.name\",\n        \"type\",\n        \"quantity\"\n      ]\n    },\n    {\n      \"name\": \"Attendee List\",\n      \"route\": \"/events/:id/attendees\",\n      \"type\": \"list\",\n      \"entity\": \"Ticket\",\n      \"access\": [\n        \"organizer\"\n      ],\n      \"fields\": [\n        \"attendeeProfile.name\",\n        \"attendeeProfile.contactInfo\",\n        \"type\",\n        \"quantity\"\n      ],\n      \"requiresPlan\": \"premium\"\n    },\n    {\n      \"name\": \"Organizer Profile\",\n      \"route\": \"/profile/organizer\",\n      \"type\": \"form\",\n      \"entity\": \"OrganizerProfile\",\n      \"access\": [\n        \"organizer\"\n      ]\n    },\n    {\n      \"name\": \"Attendee Profile\",\n      \"route\": \"/profile/attendee\",\n      \"type\": \"form\",\n      \"entity\": \"AttendeeProfile\",\n      \"access\": [\n        \"attendee\"\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"price\": 0,\n      \"isDefault\": true,\n      \"features\": [\n        \"basicEventCreation\",\n        \"ticketReservation\"\n      ]\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"featuredEventPlacement\",\n        \"attendeeListManagement\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumFeaturesGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Attendee List\"\n        ],\n        \"features\": [\n          \"featuredEventPlacement\",\n          \"attendeeListManagement\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"eventOwnership\",\n      \"entity\": \"Event\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"ticketOwnership\",\n      \"entity\": \"Ticket\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"organizerProfileOwnership\",\n      \"entity\": \"OrganizerProfile\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"attendeeProfileOwnership\",\n      \"entity\": \"AttendeeProfile\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1975,
+    "outputTokens": 2020
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 6612
+}

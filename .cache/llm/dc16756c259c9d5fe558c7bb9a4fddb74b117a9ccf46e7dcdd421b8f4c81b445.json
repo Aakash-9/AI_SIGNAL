@@ -1,0 +1,94 @@
+{
+  "data": {
+    "appName": "Online Learning Platform",
+    "appType": "e-learning",
+    "summary": "An online learning platform where instructors publish courses and students enroll, complete lessons, and provide reviews, with a freemium model offering access to paid courses and certificates via subscription.",
+    "entities": [
+      {
+        "name": "course",
+        "fields": [
+          "title",
+          "description",
+          "instructorId",
+          "price",
+          "isFree"
+        ]
+      },
+      {
+        "name": "lesson",
+        "fields": [
+          "title",
+          "videoUrl",
+          "courseId"
+        ]
+      },
+      {
+        "name": "enrollment",
+        "fields": [
+          "userId",
+          "courseId",
+          "enrollmentDate"
+        ]
+      },
+      {
+        "name": "lessonCompletion",
+        "fields": [
+          "userId",
+          "lessonId",
+          "completionDate"
+        ]
+      },
+      {
+        "name": "review",
+        "fields": [
+          "userId",
+          "courseId",
+          "rating",
+          "comment"
+        ]
+      },
+      {
+        "name": "subscription",
+        "fields": [
+          "userId",
+          "startDate",
+          "endDate",
+          "planType"
+        ]
+      }
+    ],
+    "roles": [
+      "instructor",
+      "student",
+      "admin"
+    ],
+    "features": [
+      "auth",
+      "courseManagement",
+      "lessonManagement",
+      "enrollment",
+      "progressTracking",
+      "reviews",
+      "dashboard",
+      "payments",
+      "subscriptions",
+      "certificates"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "There will be an admin role to manage the platform.",
+      "Users will have profiles to store their information.",
+      "Completion certificates are generated automatically upon course completion for subscribed users."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Online Learning Platform\",\n  \"appType\": \"e-learning\",\n  \"summary\": \"An online learning platform where instructors publish courses and students enroll, complete lessons, and provide reviews, with a freemium model offering access to paid courses and certificates via subscription.\",\n  \"entities\": [\n    {\n      \"name\": \"course\",\n      \"fields\": [\"title\", \"description\", \"instructorId\", \"price\", \"isFree\"]\n    },\n    {\n      \"name\": \"lesson\",\n      \"fields\": [\"title\", \"videoUrl\", \"courseId\"]\n    },\n    {\n      \"name\": \"enrollment\",\n      \"fields\": [\"userId\", \"courseId\", \"enrollmentDate\"]\n    },\n    {\n      \"name\": \"lessonCompletion\",\n      \"fields\": [\"userId\", \"lessonId\", \"completionDate\"]\n    },\n    {\n      \"name\": \"review\",\n      \"fields\": [\"userId\", \"courseId\", \"rating\", \"comment\"]\n    },\n    {\n      \"name\": \"subscription\",\n      \"fields\": [\"userId\", \"startDate\", \"endDate\", \"planType\"]\n    }\n  ],\n  \"roles\": [\"instructor\", \"student\", \"admin\"],\n  \"features\": [\"auth\", \"courseManagement\", \"lessonManagement\", \"enrollment\", \"progressTracking\", \"reviews\", \"dashboard\", \"payments\", \"subscriptions\", \"certificates\"],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"There will be an admin role to manage the platform.\",\n    \"Users will have profiles to store their information.\",\n    \"Completion certificates are generated automatically upon course completion for subscribed users.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 476,
+    "outputTokens": 403
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 2396
+}

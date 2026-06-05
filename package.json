@@ -1,0 +1,32 @@
+{
+  "name": "nl-to-app-compiler",
+  "version": "0.1.0",
+  "description": "Natural language -> validated config -> working app. A compiler-style pipeline for software generation.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "start": "node --experimental-sqlite --import tsx src/server/index.ts",
+    "dev": "tsx",
+    "test:contracts": "tsx src/contracts/_sanity.ts",
+    "test:compiler": "tsx src/compiler/_sanity.ts",
+    "generate": "tsx src/pipeline/_run.ts",
+    "serve": "tsx src/server/index.ts",
+    "eval": "tsx src/eval/run.ts",
+    "criteria": "tsx src/eval/criteria.ts",
+    "test:validation": "tsx src/validation/_sanity.ts",
+    "test:repair": "tsx src/repair/_sanity.ts",
+    "test:runtime": "tsx src/runtime/_sanity.ts"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "tsx": "^4.19.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/node": "^22.9.0"
+  }
+}

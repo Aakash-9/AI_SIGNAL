@@ -1,0 +1,195 @@
+{
+  "data": {
+    "meta": {
+      "name": "CRM",
+      "description": "A CRM application with user authentication, contact management, a dashboard, role-based access for admins and members, and a premium plan with payment processing and analytics for admins."
+    },
+    "entities": [
+      {
+        "name": "Contact",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "firstName",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "lastName",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "enumValues": [
+              "lead",
+              "active",
+              "inactive"
+            ],
+            "default": "lead"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Administrator with full access"
+      },
+      {
+        "name": "member",
+        "description": "Standard user",
+        "isDefault": true
+      }
+    ],
+    "permissions": [
+      {
+        "role": "member",
+        "entity": "Contact",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "admin",
+        "entity": "Contact",
+        "actions": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "Contacts",
+        "route": "/contacts",
+        "type": "list",
+        "entity": "Contact",
+        "access": [
+          "member",
+          "admin"
+        ]
+      },
+      {
+        "name": "New Contact",
+        "route": "/contacts/new",
+        "type": "form",
+        "entity": "Contact",
+        "access": [
+          "member",
+          "admin"
+        ]
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "type": "dashboard",
+        "access": [
+          "member",
+          "admin"
+        ],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Contacts",
+            "entity": "Contact",
+            "metric": "count"
+          }
+        ]
+      },
+      {
+        "name": "Analytics",
+        "route": "/analytics",
+        "type": "dashboard",
+        "access": [
+          "admin"
+        ],
+        "requiresPlan": "premium",
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Contacts",
+            "entity": "Contact",
+            "metric": "count"
+          },
+          {
+            "type": "chart",
+            "label": "Contacts by Status",
+            "entity": "Contact",
+            "field": "status",
+            "metric": "count"
+          }
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "price": 0,
+        "isDefault": true,
+        "features": []
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "analytics"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "premiumAnalyticsGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "Analytics"
+          ],
+          "features": [
+            "analytics"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "contactOwnership",
+        "entity": "Contact"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"CRM\",\n    \"description\": \"A CRM application with user authentication, contact management, a dashboard, role-based access for admins and members, and a premium plan with payment processing and analytics for admins.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Contact\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"firstName\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"lastName\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"email\",\n          \"type\": \"email\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"phone\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"company\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"enumValues\": [\n            \"lead\",\n            \"active\",\n            \"inactive\"\n          ],\n          \"default\": \"lead\"\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"admin\",\n      \"description\": \"Administrator with full access\"\n    },\n    {\n      \"name\": \"member\",\n      \"description\": \"Standard user\",\n      \"isDefault\": true\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"member\",\n      \"entity\": \"Contact\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"admin\",\n      \"entity\": \"Contact\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\",\n        \"delete\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"Contacts\",\n      \"route\": \"/contacts\",\n      \"type\": \"list\",\n      \"entity\": \"Contact\",\n      \"access\": [\n        \"member\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"New Contact\",\n      \"route\": \"/contacts/new\",\n      \"type\": \"form\",\n      \"entity\": \"Contact\",\n      \"access\": [\n        \"member\",\n        \"admin\"\n      ]\n    },\n    {\n      \"name\": \"Dashboard\",\n      \"route\": \"/dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"member\",\n        \"admin\"\n      ],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Contacts\",\n          \"entity\": \"Contact\",\n          \"metric\": \"count\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Analytics\",\n      \"route\": \"/analytics\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"admin\"\n      ],\n      \"requiresPlan\": \"premium\",\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Contacts\",\n          \"entity\": \"Contact\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"chart\",\n          \"label\": \"Contacts by Status\",\n          \"entity\": \"Contact\",\n          \"field\": \"status\",\n          \"metric\": \"count\"\n        }\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"price\": 0,\n      \"isDefault\": true,\n      \"features\": []\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"analytics\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"premiumAnalyticsGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"Analytics\"\n        ],\n        \"features\": [\n          \"analytics\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"contactOwnership\",\n      \"entity\": \"Contact\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 1927,
+    "outputTokens": 1081
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 4634
+}

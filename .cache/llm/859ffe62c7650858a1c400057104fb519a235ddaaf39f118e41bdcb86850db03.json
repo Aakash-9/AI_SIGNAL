@@ -1,0 +1,39 @@
+{
+  "data": {
+    "name": "Comment",
+    "ownable": true,
+    "fields": [
+      {
+        "name": "text",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "timestamp",
+        "type": "datetime",
+        "required": true
+      }
+    ],
+    "relations": [
+      {
+        "name": "task",
+        "kind": "manyToOne",
+        "target": "Task",
+        "required": true
+      },
+      {
+        "name": "user",
+        "kind": "manyToOne",
+        "target": "Project",
+        "required": true
+      }
+    ]
+  },
+  "raw": "{\n  \"name\": \"Comment\",\n  \"ownable\": true,\n  \"fields\": [\n    {\n      \"name\": \"text\",\n      \"type\": \"text\",\n      \"required\": true\n    },\n    {\n      \"name\": \"timestamp\",\n      \"type\": \"datetime\",\n      \"required\": true\n    }\n  ],\n  \"relations\": [\n    {\n      \"name\": \"task\",\n      \"kind\": \"manyToOne\",\n      \"target\": \"Task\",\n      \"required\": true\n    },\n    {\n      \"name\": \"user\",\n      \"kind\": \"manyToOne\",\n      \"target\": \"Project\",\n      \"required\": true\n    }\n  ]\n}",
+  "usage": {
+    "inputTokens": 386,
+    "outputTokens": 167
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1259
+}

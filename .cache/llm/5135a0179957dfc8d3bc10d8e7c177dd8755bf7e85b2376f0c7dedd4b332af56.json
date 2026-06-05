@@ -1,0 +1,74 @@
+{
+  "data": {
+    "appName": "Event Booking Platform",
+    "appType": "event booking",
+    "summary": "A platform for organizers to create events and for attendees to reserve tickets, with premium features for organizers.",
+    "entities": [
+      {
+        "name": "event",
+        "fields": [
+          "name",
+          "description",
+          "date",
+          "time",
+          "location",
+          "capacity",
+          "organizerId"
+        ]
+      },
+      {
+        "name": "ticket",
+        "fields": [
+          "eventId",
+          "attendeeId",
+          "type",
+          "price",
+          "quantity"
+        ]
+      },
+      {
+        "name": "organizer",
+        "fields": [
+          "name",
+          "contactInfo",
+          "planType"
+        ]
+      },
+      {
+        "name": "attendee",
+        "fields": [
+          "name",
+          "contactInfo"
+        ]
+      }
+    ],
+    "roles": [
+      "organizer",
+      "attendee"
+    ],
+    "features": [
+      "eventCreation",
+      "ticketReservation",
+      "attendeeListManagement",
+      "featuredEventPlacement",
+      "premiumPlan"
+    ],
+    "hasAuth": true,
+    "hasPayments": true,
+    "ambiguities": [],
+    "assumptions": [
+      "Organizers and attendees will have user accounts for authentication.",
+      "The 'premium plan' implies a subscription or payment model.",
+      "Ticket types might include different prices or access levels.",
+      "Attendee lists are specific to each event."
+    ],
+    "clarifyingQuestions": []
+  },
+  "raw": "{\n  \"appName\": \"Event Booking Platform\",\n  \"appType\": \"event booking\",\n  \"summary\": \"A platform for organizers to create events and for attendees to reserve tickets, with premium features for organizers.\",\n  \"entities\": [\n    {\n      \"name\": \"event\",\n      \"fields\": [\"name\", \"description\", \"date\", \"time\", \"location\", \"capacity\", \"organizerId\"]\n    },\n    {\n      \"name\": \"ticket\",\n      \"fields\": [\"eventId\", \"attendeeId\", \"type\", \"price\", \"quantity\"]\n    },\n    {\n      \"name\": \"organizer\",\n      \"fields\": [\"name\", \"contactInfo\", \"planType\"]\n    },\n    {\n      \"name\": \"attendee\",\n      \"fields\": [\"name\", \"contactInfo\"]\n    }\n  ],\n  \"roles\": [\"organizer\", \"attendee\"],\n  \"features\": [\"eventCreation\", \"ticketReservation\", \"attendeeListManagement\", \"featuredEventPlacement\", \"premiumPlan\"],\n  \"hasAuth\": true,\n  \"hasPayments\": true,\n  \"ambiguities\": [],\n  \"assumptions\": [\n    \"Organizers and attendees will have user accounts for authentication.\",\n    \"The 'premium plan' implies a subscription or payment model.\",\n    \"Ticket types might include different prices or access levels.\",\n    \"Attendee lists are specific to each event.\"\n  ],\n  \"clarifyingQuestions\": []\n}",
+  "usage": {
+    "inputTokens": 437,
+    "outputTokens": 330
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 1516
+}

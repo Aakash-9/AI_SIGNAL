@@ -1,0 +1,352 @@
+{
+  "data": {
+    "meta": {
+      "name": "Helpdesk",
+      "description": "A customer support helpdesk application for managing tickets, with features for users, agents, managers, and premium users with SLA tracking."
+    },
+    "entities": [
+      {
+        "name": "Ticket",
+        "ownable": true,
+        "fields": [
+          {
+            "name": "subject",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "priority",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "default": "medium"
+          },
+          {
+            "name": "status",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "open",
+              "in_progress",
+              "resolved",
+              "closed"
+            ],
+            "default": "open"
+          }
+        ],
+        "relations": [
+          {
+            "name": "assignedAgent",
+            "kind": "manyToOne",
+            "target": "User",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "required": true,
+            "unique": true
+          },
+          {
+            "name": "role",
+            "type": "enum",
+            "required": true,
+            "enumValues": [
+              "user",
+              "agent",
+              "manager"
+            ],
+            "default": "user"
+          }
+        ]
+      },
+      {
+        "name": "Sla",
+        "fields": [
+          {
+            "name": "targetResponseTime",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "targetResolutionTime",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "startTime",
+            "type": "datetime",
+            "required": true
+          },
+          {
+            "name": "endTime",
+            "type": "datetime"
+          },
+          {
+            "name": "violated",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "relations": [
+          {
+            "name": "ticket",
+            "kind": "manyToOne",
+            "target": "Ticket",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "user",
+        "description": "Can submit tickets.",
+        "isDefault": true
+      },
+      {
+        "name": "agent",
+        "description": "Can respond to tickets and change status."
+      },
+      {
+        "name": "manager",
+        "description": "Can view ticket analytics."
+      },
+      {
+        "name": "premiumUser",
+        "description": "Has access to SLA tracking."
+      }
+    ],
+    "permissions": [
+      {
+        "role": "user",
+        "entity": "Ticket",
+        "actions": [
+          "create",
+          "read"
+        ],
+        "scope": "own"
+      },
+      {
+        "role": "agent",
+        "entity": "Ticket",
+        "actions": [
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "manager",
+        "entity": "Ticket",
+        "actions": [
+          "read"
+        ],
+        "scope": "all"
+      },
+      {
+        "role": "premiumUser",
+        "entity": "Sla",
+        "actions": [
+          "create",
+          "read",
+          "update"
+        ],
+        "scope": "all"
+      }
+    ],
+    "pages": [
+      {
+        "name": "My Tickets",
+        "route": "/tickets",
+        "type": "list",
+        "entity": "Ticket",
+        "access": [
+          "user",
+          "agent",
+          "manager"
+        ],
+        "fields": [
+          "subject",
+          "priority",
+          "status",
+          "createdAt"
+        ]
+      },
+      {
+        "name": "New Ticket",
+        "route": "/tickets/new",
+        "type": "form",
+        "entity": "Ticket",
+        "access": [
+          "user"
+        ]
+      },
+      {
+        "name": "Ticket Detail",
+        "route": "/tickets/:id",
+        "type": "detail",
+        "entity": "Ticket",
+        "access": [
+          "user",
+          "agent",
+          "manager"
+        ]
+      },
+      {
+        "name": "Agent Dashboard",
+        "route": "/agent/dashboard",
+        "type": "dashboard",
+        "access": [
+          "agent"
+        ],
+        "widgets": [
+          {
+            "type": "table",
+            "label": "Open Tickets",
+            "entity": "Ticket",
+            "filter": {
+              "status": "open"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Manager Dashboard",
+        "route": "/manager/dashboard",
+        "type": "dashboard",
+        "access": [
+          "manager"
+        ],
+        "widgets": [
+          {
+            "type": "stat",
+            "label": "Total Tickets",
+            "entity": "Ticket",
+            "metric": "count"
+          },
+          {
+            "type": "stat",
+            "label": "Open Tickets",
+            "entity": "Ticket",
+            "metric": "count",
+            "filter": {
+              "status": "open"
+            }
+          },
+          {
+            "type": "stat",
+            "label": "Closed Tickets",
+            "entity": "Ticket",
+            "metric": "count",
+            "filter": {
+              "status": "closed"
+            }
+          },
+          {
+            "type": "chart",
+            "label": "Tickets by Priority",
+            "entity": "Ticket",
+            "chartType": "bar",
+            "groupBy": "priority",
+            "metric": "count"
+          }
+        ]
+      },
+      {
+        "name": "SLA Tracking",
+        "route": "/sla",
+        "type": "list",
+        "entity": "Sla",
+        "access": [
+          "premiumUser"
+        ],
+        "requiresPlan": "premium",
+        "fields": [
+          "ticket.subject",
+          "targetResponseTime",
+          "targetResolutionTime",
+          "startTime",
+          "endTime",
+          "violated"
+        ]
+      }
+    ],
+    "plans": [
+      {
+        "name": "free",
+        "price": 0,
+        "isDefault": true,
+        "features": [
+          "ticketManagement",
+          "userManagement",
+          "analytics",
+          "roleBasedAccess"
+        ]
+      },
+      {
+        "name": "premium",
+        "price": 10,
+        "interval": "month",
+        "features": [
+          "slaTracking"
+        ]
+      }
+    ],
+    "businessRules": [
+      {
+        "type": "plan_gate",
+        "id": "slaTrackingGate",
+        "requiresPlan": "premium",
+        "gates": {
+          "pages": [
+            "SLA Tracking"
+          ],
+          "features": [
+            "slaTracking"
+          ]
+        }
+      },
+      {
+        "type": "ownership",
+        "id": "ticketOwnership",
+        "entity": "Ticket"
+      },
+      {
+        "type": "ownership",
+        "id": "slaOwnership",
+        "entity": "Sla"
+      }
+    ],
+    "auth": {
+      "strategy": "email_password",
+      "requireAuth": true
+    }
+  },
+  "raw": "{\n  \"meta\": {\n    \"name\": \"Helpdesk\",\n    \"description\": \"A customer support helpdesk application for managing tickets, with features for users, agents, managers, and premium users with SLA tracking.\"\n  },\n  \"entities\": [\n    {\n      \"name\": \"Ticket\",\n      \"ownable\": true,\n      \"fields\": [\n        {\n          \"name\": \"subject\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"priority\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"low\",\n            \"medium\",\n            \"high\"\n          ],\n          \"default\": \"medium\"\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"open\",\n            \"in_progress\",\n            \"resolved\",\n            \"closed\"\n          ],\n          \"default\": \"open\"\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"assignedAgent\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"User\",\n          \"required\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"User\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\",\n          \"required\": true\n        },\n        {\n          \"name\": \"email\",\n          \"type\": \"email\",\n          \"required\": true,\n          \"unique\": true\n        },\n        {\n          \"name\": \"role\",\n          \"type\": \"enum\",\n          \"required\": true,\n          \"enumValues\": [\n            \"user\",\n            \"agent\",\n            \"manager\"\n          ],\n          \"default\": \"user\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Sla\",\n      \"fields\": [\n        {\n          \"name\": \"targetResponseTime\",\n          \"type\": \"integer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"targetResolutionTime\",\n          \"type\": \"integer\",\n          \"required\": true\n        },\n        {\n          \"name\": \"startTime\",\n          \"type\": \"datetime\",\n          \"required\": true\n        },\n        {\n          \"name\": \"endTime\",\n          \"type\": \"datetime\"\n        },\n        {\n          \"name\": \"violated\",\n          \"type\": \"boolean\",\n          \"default\": false\n        }\n      ],\n      \"relations\": [\n        {\n          \"name\": \"ticket\",\n          \"kind\": \"manyToOne\",\n          \"target\": \"Ticket\",\n          \"required\": true\n        }\n      ]\n    }\n  ],\n  \"roles\": [\n    {\n      \"name\": \"user\",\n      \"description\": \"Can submit tickets.\",\n      \"isDefault\": true\n    },\n    {\n      \"name\": \"agent\",\n      \"description\": \"Can respond to tickets and change status.\"\n    },\n    {\n      \"name\": \"manager\",\n      \"description\": \"Can view ticket analytics.\"\n    },\n    {\n      \"name\": \"premiumUser\",\n      \"description\": \"Has access to SLA tracking.\"\n    }\n  ],\n  \"permissions\": [\n    {\n      \"role\": \"user\",\n      \"entity\": \"Ticket\",\n      \"actions\": [\n        \"create\",\n        \"read\"\n      ],\n      \"scope\": \"own\"\n    },\n    {\n      \"role\": \"agent\",\n      \"entity\": \"Ticket\",\n      \"actions\": [\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"manager\",\n      \"entity\": \"Ticket\",\n      \"actions\": [\n        \"read\"\n      ],\n      \"scope\": \"all\"\n    },\n    {\n      \"role\": \"premiumUser\",\n      \"entity\": \"Sla\",\n      \"actions\": [\n        \"create\",\n        \"read\",\n        \"update\"\n      ],\n      \"scope\": \"all\"\n    }\n  ],\n  \"pages\": [\n    {\n      \"name\": \"My Tickets\",\n      \"route\": \"/tickets\",\n      \"type\": \"list\",\n      \"entity\": \"Ticket\",\n      \"access\": [\n        \"user\",\n        \"agent\",\n        \"manager\"\n      ],\n      \"fields\": [\n        \"subject\",\n        \"priority\",\n        \"status\",\n        \"createdAt\"\n      ]\n    },\n    {\n      \"name\": \"New Ticket\",\n      \"route\": \"/tickets/new\",\n      \"type\": \"form\",\n      \"entity\": \"Ticket\",\n      \"access\": [\n        \"user\"\n      ]\n    },\n    {\n      \"name\": \"Ticket Detail\",\n      \"route\": \"/tickets/:id\",\n      \"type\": \"detail\",\n      \"entity\": \"Ticket\",\n      \"access\": [\n        \"user\",\n        \"agent\",\n        \"manager\"\n      ]\n    },\n    {\n      \"name\": \"Agent Dashboard\",\n      \"route\": \"/agent/dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"agent\"\n      ],\n      \"widgets\": [\n        {\n          \"type\": \"table\",\n          \"label\": \"Open Tickets\",\n          \"entity\": \"Ticket\",\n          \"filter\": {\n            \"status\": \"open\"\n          }\n        }\n      ]\n    },\n    {\n      \"name\": \"Manager Dashboard\",\n      \"route\": \"/manager/dashboard\",\n      \"type\": \"dashboard\",\n      \"access\": [\n        \"manager\"\n      ],\n      \"widgets\": [\n        {\n          \"type\": \"stat\",\n          \"label\": \"Total Tickets\",\n          \"entity\": \"Ticket\",\n          \"metric\": \"count\"\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Open Tickets\",\n          \"entity\": \"Ticket\",\n          \"metric\": \"count\",\n          \"filter\": {\n            \"status\": \"open\"\n          }\n        },\n        {\n          \"type\": \"stat\",\n          \"label\": \"Closed Tickets\",\n          \"entity\": \"Ticket\",\n          \"metric\": \"count\",\n          \"filter\": {\n            \"status\": \"closed\"\n          }\n        },\n        {\n          \"type\": \"chart\",\n          \"label\": \"Tickets by Priority\",\n          \"entity\": \"Ticket\",\n          \"chartType\": \"bar\",\n          \"groupBy\": \"priority\",\n          \"metric\": \"count\"\n        }\n      ]\n    },\n    {\n      \"name\": \"SLA Tracking\",\n      \"route\": \"/sla\",\n      \"type\": \"list\",\n      \"entity\": \"Sla\",\n      \"access\": [\n        \"premiumUser\"\n      ],\n      \"requiresPlan\": \"premium\",\n      \"fields\": [\n        \"ticket.subject\",\n        \"targetResponseTime\",\n        \"targetResolutionTime\",\n        \"startTime\",\n        \"endTime\",\n        \"violated\"\n      ]\n    }\n  ],\n  \"plans\": [\n    {\n      \"name\": \"free\",\n      \"price\": 0,\n      \"isDefault\": true,\n      \"features\": [\n        \"ticketManagement\",\n        \"userManagement\",\n        \"analytics\",\n        \"roleBasedAccess\"\n      ]\n    },\n    {\n      \"name\": \"premium\",\n      \"price\": 10,\n      \"interval\": \"month\",\n      \"features\": [\n        \"slaTracking\"\n      ]\n    }\n  ],\n  \"businessRules\": [\n    {\n      \"type\": \"plan_gate\",\n      \"id\": \"slaTrackingGate\",\n      \"requiresPlan\": \"premium\",\n      \"gates\": {\n        \"pages\": [\n          \"SLA Tracking\"\n        ],\n        \"features\": [\n          \"slaTracking\"\n        ]\n      }\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"ticketOwnership\",\n      \"entity\": \"Ticket\"\n    },\n    {\n      \"type\": \"ownership\",\n      \"id\": \"slaOwnership\",\n      \"entity\": \"Sla\"\n    }\n  ],\n  \"auth\": {\n    \"strategy\": \"email_password\",\n    \"requireAuth\": true\n  }\n}",
+  "usage": {
+    "inputTokens": 2068,
+    "outputTokens": 2000
+  },
+  "model": "gemini-2.5-flash-lite",
+  "latencyMs": 5813
+}
